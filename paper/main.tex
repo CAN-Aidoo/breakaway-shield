@@ -1,0 +1,115 @@
+% Paper 5. IEEE conference layout emulated with article + mathptmx (official IEEEtran.cls not available offline;
+% on Overleaf, replace the first block with \documentclass[conference]{IEEEtran}).
+\documentclass[10pt,twocolumn,letterpaper]{article}
+\usepackage[top=0.75in,bottom=1in,left=0.625in,right=0.625in,columnsep=0.25in]{geometry}
+\usepackage{mathptmx}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{graphicx,booktabs,multirow,xcolor}
+\usepackage{titlesec,abstract,balance,stfloats}
+\usepackage[hidelinks]{hyperref}
+\usepackage[font=footnotesize,labelfont=bf,labelsep=period]{caption}
+\renewcommand{\thesection}{\Roman{section}}
+\renewcommand{\thesubsection}{\Alph{subsection}}
+\titleformat{\section}{\centering\normalsize\scshape}{\thesection.}{0.5em}{}
+\titleformat{\subsection}{\normalsize\itshape}{\thesubsection.}{0.5em}{}
+\titlespacing*{\section}{0pt}{8pt}{4pt}
+\titlespacing*{\subsection}{0pt}{6pt}{3pt}
+\renewcommand{\abstractnamefont}{\normalfont\small\bfseries\itshape}
+\renewcommand{\abstracttextfont}{\normalfont\small\bfseries}
+\setlength{\absleftindent}{0pt}\setlength{\absrightindent}{0pt}
+\newtheorem{proposition}{Proposition}
+\newcommand{\Q}[1]{\textbf{Q#1}}
+\input{numbers5.tex}
+
+\title{\Large\bfseries Physics Guards for Residual Policies at Breakaway:\\ When Learned Corrections Should Defer to a Friction Model}
+\author{Clement Aidoo\\ \small CANLABS, Ghana \quad \texttt{clement.aidoo@canlabs.org}\\
+\small Code, data and protocol: \url{https://github.com/CAN-Aidoo/breakaway-shield}}
+\date{}
+
+\begin{document}
+\maketitle
+
+\input{abstract.tex}
+
+\section{Introduction}
+Residual learning keeps a hand-designed controller and learns a correction to its output \cite{johannink2019,silver2018}. In earlier work we applied it to gravitational pivoting with a parallel-jaw gripper that senses the object only through wrist motor current \cite{aidoo2026a}. The residual roughly halved the number of slow angle measurements per pivot, from 18.0 to 9.3, but it overshot targets more often. Almost every overshoot happened on one step, the step on which the rod first slipped \cite{aidoo2026b}. A hand-made guard repaired most of the damage, but it was designed after we had seen the test results and carried no guarantee.
+
+That failure has a physical cause. When a grasped object breaks away, friction falls from its static to its kinetic level, and the surplus of gravity over kinetic friction becomes kinetic energy. A quasi-static friction model, which both the base controller and our earlier guard rely on, ignores this energy. A learned correction that makes releases larger or faster than the model's falls exactly into the region where the model is least reliable.
+
+This paper asks when a learned correction should defer to a friction model. We turn the first-slip guard into a \emph{shield} \cite{alshiekh2018}: a closed-form set of grip actions that keeps the post-breakaway travel within the target band whenever the true static-to-kinetic ratio $r=\mu_s/\mu_k$ does not exceed an assumed bound $r_{\max}$. Outside that set, the learned correction is dropped. We study two tasks, gravitational pivoting and controlled sliding of a rod through the fingers, in MuJoCo simulation with explicit stick--slip. Our contributions are:
+\begin{itemize}\setlength\itemsep{1pt}
+\item A breakaway shield for pivoting with a one-line closed form (Proposition~\ref{prop:pivot}), together with the exact conditions under which it reduces to our earlier quasi-static guard, and a timing shield for sliding (Proposition~\ref{prop:slide}). Sliding needs a bound on time below the arrest force, not a force floor.
+\item A feasibility analysis showing that, from rest, a certified release toward a target $\theta^\ast$ exists only if $r<\varphi_{\lim}/\sin\varphi_{\lim}$. Shallow pivots are therefore infeasible for realistic $r$, and the shield's own infeasible region coincides with this physical one.
+\item A pre-registered simulation study (\Q1--\Q4) comparing the model controller, unshielded and shielded residual policies, and shields applied at training or only at test time, across $r$ and under $r_{\max}$ mismatch, with certificate-violation rates reported alongside task metrics.
+\end{itemize}
+
+\section{Related Work}
+\textbf{Residual learning and physics priors.} Residual RL learns an additive correction on top of a controller \cite{johannink2019,silver2018} or a learned base policy \cite{ankile2024}. Corrections are usually limited by a fixed magnitude or a penalty: ForceRFT caps a wrist-force-conditioned residual at fixed per-axis bounds \cite{forcerft2026}. Chen, Lu, Colgate and Lynch embed grasp-quality and fingertip-geometry priors into the reward and the hardware for in-hand rotation \cite{chen2026priors}. Our bound is different in kind: it is \emph{state-dependent}, derived from contact mechanics, and enforced at run time.
+
+\textbf{Shields and safety filters.} Shielding overrides unsafe actions using a model of the system \cite{alshiekh2018}. Control-barrier-function filters \cite{cheng2019,ames2019}, Hamilton--Jacobi reachability \cite{fisac2019} and predictive safety filters \cite{wabersich2021} generalise the idea; Brunke et al.\ review the field \cite{brunke2022}. Adaptive shielding infers hidden parameters such as friction online \cite{kwon2026}, and ResSafe learns the safety filter itself as a residual \cite{ressafe2026}. Closest to us on the friction side, Johansson et al.\ filter bimanual manipulation actions with a Coulomb factor of safety evaluated by rollouts \cite{johansson2025}. Closest in spirit, Shuto and Vargas derive a certified, sensorless grasp-damage bound from a stiffness lower bound and propose it as a safe-action parameter for learned grasping \cite{shuto2026}. We make two changes. Our certificate rests on the static-to-kinetic \emph{transition}, which a single-$\mu$ Coulomb model cannot express. And we actually train and test learners under it.
+
+\textbf{Pivoting and controlled sliding.} Gravitational pivoting has been planned open loop \cite{holladay2015}, controlled adaptively \cite{vina2016} and learned with tactile sensing \cite{toskov2022}. Dynamic in-hand sliding has been planned with soft-finger limit surfaces \cite{shi2017}, and prehensile pushing uses Coulomb motion cones \cite{chavandafle2015}. Soft-finger friction scales nonlinearly with load \cite{xydas1999,howe1996}. Kolbert et al.\ found that MuJoCo under-predicted a measured pivot \cite{kolbert2016}. None of these works isolates breakaway as the failure mode of a learned correction.
+
+\section{Breakaway Shields}\label{sec:theory}
+\subsection{Pivoting}
+A rod of mass $m$ is held at offset $d$ from its centre of mass by two soft fingers with grip force $F$. Let $\varphi\in[0,\pi/2]$ be the depression of the centre of mass below horizontal. We assume (A1) a rigid rod rotating about the grip axis, (A2) torsional capacity linear in grip, $\tau_s=c_sF$ static and $\tau_k=c_sF/r$ kinetic, (A3) a commanded grip that is tracked and non-increasing during a release, (A4) no stored pad compliance and no damping, and (A5) gravity torque $mgd\cos\varphi$. The horizontal breakaway grip is $F_h=mgd/c_s$.
+
+\begin{proposition}\label{prop:pivot}
+Suppose the rod is stuck at $\varphi_0$ under grip $F_{\rm last}$, and the true ratio satisfies $r\le r_{\max}$. Then any release to
+\begin{equation}
+F \;\ge\; F_{\rm last}\,\frac{r_{\max}}{\cos\varphi_0}\,S(\varphi_0,\varphi_{\lim}),\qquad S(a,b)=\frac{\sin b-\sin a}{b-a},\label{eq:shield}
+\end{equation}
+leaves the rod stuck at some $\varphi\le\varphi_{\lim}$.
+\end{proposition}
+\begin{proof}
+Sticking at $\varphi_0$ implies $c_sF_{\rm last}\ge mgd\cos\varphi_0$, so $F_h\le F_{\rm last}/\cos\varphi_0$. If the rod breaks away under final grip $F$, its kinetic energy obeys $\tfrac12 I\dot\varphi^2\le mgd\,g(\varphi)$ with $g(\varphi)=\sin\varphi-\sin\varphi_0-k(\varphi-\varphi_0)$ and $k=F/(rF_h)$. By A3, the grip during sliding is at least $F$; by A4, no energy enters from compliance. The rod stops at the first root of $g$ after $\varphi_0$. Because $\sin$ is concave on $[0,\pi/2]$, the chord slope $S(\varphi_0,\varphi)$ decreases in $\varphi$, so that root is at most $\varphi_{\lim}$ iff $k\ge S(\varphi_0,\varphi_{\lim})$. At the root, $\cos\varphi<k$, so even kinetic friction exceeds gravity and the rod re-sticks. Substituting the bounds on $F_h$ and $r$ gives \eqref{eq:shield}.
+\end{proof}
+
+\noindent\emph{Relation to the earlier guard.} With $r_{\max}=1$ and $\varphi_0=0$, \eqref{eq:shield} gives $F\ge F_{\rm last}\sin\varphi_{\lim}/\varphi_{\lim}$. Our earlier guard, $F\ge F_{\rm last}\cos\varphi_{\lim}$ \cite{aidoo2026b}, follows only if the energy balance is replaced by quasi-static equilibrium ($\cos\varphi=k$). The two floors differ by $\tan\varphi_{\lim}/\varphi_{\lim}$: about 1.03 at 0.3\,rad, 1.20 at 0.7\,rad and 1.56 at 1.0\,rad. The quasi-static guard therefore ignores the inertia of the first slip even when $r=1$.
+
+\noindent\emph{Feasibility.} A release that causes motion needs $F<F_h\cos\varphi_0$, while the shield needs $F\ge r\,F_h S$. A certified release from rest therefore exists only if
+\begin{equation}
+r \;<\; r^\ast(\varphi_{\lim})=\varphi_{\lim}/\sin\varphi_{\lim},\label{eq:feas}
+\end{equation}
+which is $1.04$ at $0.5$\,rad, $1.09$ at $0.7$\,rad and $1.19$ at $1.0$\,rad. Because the shield computes its floor from $F_{\rm last}$ rather than the unknown $F_h$, it can only shrink the step toward breakaway, by the factor $r_{\max}S/\cos\varphi_0$. Whenever that factor is below one, the search still reaches breakaway, so the shield's infeasible region is the physical one (Fig.~\ref{fig:feas}). The price is smaller steps, and so more measurements.
+
+\noindent\emph{Deferral rule.} At each step we compute the floor. If the floor is below $0.995F_{\rm last}$, the step is \emph{certified} and the commanded grip is $\max(F_{\rm policy},\text{floor})$, a clip that never lowers grip. Otherwise no certified release exists. We pre-specified two fallbacks: \emph{defer}, which drops the learned residual and takes the model controller's step (uncertified); and \emph{decline}, which stops and holds. We set $\varphi_{\lim}=|\theta^\ast|+0.05-0.02$\,rad, the overshoot threshold minus a 2.5$\sigma$ sensing margin.
+
+\subsection{Controlled sliding}
+A vertical rod held at its centre of mass slides along its axis under gravity. Static breakaway occurs at $F_b=mg/(2\mu_s)$, but stopping a sliding rod needs $F>rF_b$. Gravity does not weaken as the rod slides, so for $r>1$ any release that causes breakaway accelerates the rod until the grip rises above $rF_b$. A force floor cannot bound this travel. What bounds it is the time spent below the arrest force.
+
+\begin{proposition}\label{prop:slide}
+Suppose the rod was last observed stuck at grip $F_{\rm stuck}$ and $r\le r_{\max}$. For a planned grip profile $F(t)$ starting from rest, the travel is at most $\bar x=\int_0^T\bar v\,dt$, where $\dot{\bar v}=g\,(1-F(t)/(r_{\max}F_{\rm stuck}))$ and $\bar v$ is clipped at zero.
+\end{proposition}
+\begin{proof}
+While sliding, the acceleration is $g(1-F/(rF_b))$, and $rF_b\le r_{\max}F_{\rm stuck}$ because the rod was stuck at $F_{\rm stuck}$. So the true acceleration never exceeds $\dot{\bar v}$, whether positive or negative, and the true velocity never exceeds $\bar v$.
+\end{proof}
+The shield shortens the hold of each pulse, by bisection, until $\bar x$ is within the remaining distance plus 5\,mm minus a 1.5\,mm sensing margin. Unlike pivoting, sliding has no infeasible region caused by $r$. Infeasibility arises only while $F_{\rm stuck}$ is still loose, early in the search.
+
+\section{Experimental Setup}\label{sec:setup}
+\textbf{Simulator.} We use MuJoCo 3.15.0 \cite{todorov2012} with the rig of \cite{aidoo2026a,aidoo2026b}: soft-finger contacts (condim 4), an elliptic cone, impratio 10, 20 noslip iterations and a 1\,ms step. MuJoCo has a single friction coefficient per geom and no true stick state \cite{mujocoissue}. We therefore emulate stick--slip by switching the torsional coefficient (pivoting) or the sliding coefficient (sliding) of all contact geoms between $\mu$ and $\mu/r$, with hysteresis on the relative speed: switching to kinetic friction above 0.05\,rad/s or 5\,mm/s, and back to static below 0.01\,rad/s or 1\,mm/s (Fig.~\ref{fig:mech}c). With $r=1$ the rig reproduces our earlier results exactly, to $10^{-6}$\,rad. Section~\ref{sec:valid} reports the validation checks.
+
+\textbf{Tasks and controllers.} \emph{Pivoting} uses the object distribution and model controller of \cite{aidoo2026b}: a $\times0.94$ grip search until motion, then quasi-static steps toward the target; angle measurements have $\sigma=0.008$\,rad. \emph{Sliding} lowers the rod by $x^\ast\in[10,50]$\,mm using release pulses. Each pulse releases in 0.1\,s, holds for $\tau$ and re-clamps in 0.3\,s, followed by a position measurement ($\sigma=0.5$\,mm). The model controller searches with $\times0.9$ steps and then chooses the hold from a Coulomb ($r=1$) prediction, corrected by the ratio of observed to predicted travel. In both tasks, each measurement is one \emph{probe}, the costly sensing action.
+
+\textbf{Learning.} Linear residual policies, as in \cite{aidoo2026b}, are trained with antithetic evolution strategies (1560 episodes per run). Training randomises $r\sim U[1,1.1]$ for pivoting, with shield $r_{\max}=1.1$, and $r\sim U[1,1.2]$ for sliding, with $r_{\max}=1.2$. For each task we train two methods with 5 seeds each: an unshielded residual, and a residual with the shield in the training loop (defer fallback).
+
+\textbf{Methods.} B0 is the model controller; B1 adds the earlier quasi-static guard (pivoting only); B0S is the model controller with the shield. B2 is the unshielded residual; B3 adds the earlier guard (pivoting only). B4 applies the shield to the unshielded residual at test time only. B5 is the shield-trained residual. A suffix ``d'' denotes the decline fallback.
+
+\textbf{Protocol and statistics.} The protocol, including hypotheses, sets, metrics and tests, was committed before any test evaluation; the sliding task was added as a dated deviation before any sliding test data existed. Each test set has 40 held-out objects evaluated at fixed $r$ values, and a confirmation set of 40 fresh objects was run once after the analysis. Learned methods are averaged over seeds per object. We use paired Wilcoxon tests against B0, hierarchical bootstrap 95\% CIs (seeds, then objects), Holm correction within each task's B5-vs-B0 family, and Clopper--Pearson intervals for rates.
+
+\input{results.tex}
+
+\section{Limitations}\label{sec:limits}
+\input{limitations.tex}
+
+\section{Conclusion}
+\input{conclusion.tex}
+
+\section*{Acknowledgements and Disclosure}
+Simulation code, analysis and drafting were carried out with the assistance of an AI model (Claude, Anthropic) under the author's direction. The author takes responsibility for the content. All results are from simulation.
+
+\small
+\bibliographystyle{unsrt}
+\input{refs.tex}
+\end{document}
