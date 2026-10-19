@@ -29,6 +29,25 @@ RATE0 = 0.3         # paper-1 release rate (N/s)
 MAX_STEPS = 30
 SF, SR = 0.25, 1.4  # residual scales: F x[0.78,1.28], rate x[0.25,4.1]
 SP = 0.5            # pure policy step range
+OVER = 0.05         # overshoot threshold (rad): theta_final < target - OVER
+PHI_MARGIN = 0.02   # sensing margin subtracted from the certified travel limit (2.5 sigma of 0.008 rad)
+RMAX = 1.2          # default r_max assumed by the shield (static/kinetic torsional friction ratio)
+
+
+def chord(phi0, phil):
+    """Chord slope of sin between phi0 and phil (phil > phi0)."""
+    return (np.sin(phil) - np.sin(phi0)) / (phil - phi0)
+
+
+def shield_floor(F_last, th_meas, target, r_max):
+    """Breakaway shield (Proposition 1). The rod is stuck at depression phi0 under F_last, so
+    F_h <= F_last / cos(phi0). Any release to F >= floor keeps the undamped post-breakaway stop at or
+    below phi_lim = |target| + OVER - PHI_MARGIN if the true ratio r <= r_max. Returns (floor, phi0, phil);
+    floor = inf if phi0 already at/after phi_lim."""
+    phi0 = max(0.0, -th_meas); phil = -target + OVER - PHI_MARGIN
+    if phil <= phi0 + 1e-3:
+        return np.inf, phi0, phil
+    return F_last * r_max * chord(phi0, phil) / np.cos(phi0), phi0, phil
 
 
 def sample_object(rng, ood=False):
@@ -58,6 +77,7 @@ class PivotEpisode:
     def __init__(self, obj, rng, sigma_meas=0.008, meas="surrogate"):
         self.o = obj; self.rng = rng; self.sig = sigma_meas; self.meas_mode = meas
         self.r = Rig(obj["m"], obj["d"], obj["mu"], obj["mut"], ratio=obj.get("ratio", 1.0))
+        self.rmax = obj.get("rmax", RMAX)
         if meas == "current":
             try:
                 from exp_c2 import initial_probe, KT_NOM
@@ -82,7 +102,7 @@ class PivotEpisode:
         th0 = self.measure(); th = th0
         F0 = min(30.0, self.A_est / (2 * MUT_MIN)); F = F0
         F_last = None; moved = False; c_hat = 0.0
-        traj = []
+        traj = []; n_clip = n_defer = n_cert = n_viol = n_steps = 0; declined = False
         for k in range(MAX_STEPS):
             if not r.held(): break
             # ---- paper-1 model proposal ----
@@ -94,10 +114,10 @@ class PivotEpisode:
                 aim = th + GAIN * (target - th)
                 F_model = min(F_last * 0.995, np.cos(aim) / max(c_hat, 1e-6))
             rate = RATE0
-            if mode not in ("model", "modelG") and F_last is not None:
+            if mode not in ("model", "modelG", "modelS", "modelSd") and F_last is not None:
                 a = np.clip(policy(features(th, target, F_last, F0, k, moved, c_hat)), -1, 1)
                 rate = RATE0 * np.exp(SR * a[1])
-                if mode in ("residual", "residualG"):
+                if mode in ("residual", "residualG", "residualS", "residualSd", "residualR"):
                     F = F_model * np.exp(SF * a[0])
                 else:  # pure: learned multiplicative step down from the last force
                     F = F_last * np.exp(-SP * (1 + a[0]) / 2)
@@ -115,6 +135,18 @@ class PivotEpisode:
                 # search-phase bound: no motion at F_last => F_h <= F_last, so releasing to F
                 # rotates the rod by at most acos(F/F_last); never step past the target
                 F = max(F, F_last * np.cos(target))
+            cert = None
+            if mode in ("modelS", "residualS", "modelSd", "residualSd") and F_last is not None:
+                floor, phi0, phil = shield_floor(F_last, th, target, self.rmax)
+                if floor < F_last * 0.995:          # feasible: certified release exists
+                    if F < floor: n_clip += 1
+                    F = max(F, floor); cert = phil
+                else:                               # infeasible: no certified release exists
+                    n_defer += 1
+                    if mode.endswith("Sd"):             # 'decline': stop and hold (never overshoots by release)
+                        declined = True
+                        break
+                    F = F_model                         # 'defer': drop the residual, take the model step (uncertified)
             F = float(np.clip(F, 0.3, 30.0))
             # ---- execute: fast pre-ramp, slow release, hold, clamp, measure ----
             if F_last is not None and 1.05 * F_last < r.grip:
@@ -122,6 +154,10 @@ class PivotEpisode:
             r.ramp_grip(F, secs=max(0.5, (r.grip - F) / rate), hold=1.0)
             F_last = F
             r.clamp(); th = self.measure()
+            n_steps += 1
+            if cert is not None:
+                n_cert += 1
+                if -r.com_dir() > cert: n_viol += 1     # certificate violated (true stop beyond phi_lim)
             if log: traj.append((k, F, rate, th, r.com_dir()))
             if not moved and th - th0 <= -0.03:
                 moved = True
@@ -131,7 +167,8 @@ class PivotEpisode:
                 break
         final = r.com_dir(); held = r.held()
         return dict(final=final, err=final - target, held=held, t_sim=r.t_sim,
-                    probes=self.probes, steps=len(traj) if log else None, traj=traj)
+                    probes=self.probes, steps=n_steps, traj=traj, n_clip=n_clip, n_defer=n_defer,
+                    n_cert=n_cert, n_viol=n_viol, n_breakaway=r.n_breakaway, declined=declined)
 
 
 def score(res, lam=0.5):
