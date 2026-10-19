@@ -123,3 +123,24 @@ Metrics:
 - drops, probes, certified steps, violations.
 
 Statistics as in Section 6.
+
+**D2 (2026-10-19): validation findings and revised V6.** Recorded before any test or confirmation data existed;
+no method, parameter or training setting is changed.
+
+- **V2, intrinsic ratio** (v2_intrinsic.py, 8 validation objects): the MuJoCo contact itself has a small
+  static/kinetic gap. Breakaway happens at 0.988 of the nominal capacity and sliding at 0.980, an intrinsic ratio of
+  1.008 (range 1.006–1.010). An emulated r = 1.2 gives an effective 1.206. The emulation is therefore faithful, but
+  the effective ratio is about r × 1.008.
+- **V6 revised** (v6_prop1.py): the original V6 compared travel against the bound computed from the *nominal* F_h.
+  Near breakaway, a 1–2% capacity error moves the predicted stop by about 0.2 rad, so that comparison does not test
+  Proposition 1, which only uses the grip at which the rod was observed stuck.
+- The revised V6 finds breakaway by a slow ramp, holds the rod stuck at 1.01 F_brk, then releases to q·F_last.
+  Over 128 releases (8 objects × r in {1.0, 1.05, 1.1, 1.2} × q in {0.99, 0.97, 0.94, 0.9}), simulated travel
+  averaged 0.90–0.97 of the bound. However, 24 of 128 exceeded the matched-ratio bound, and 9 of 128 exceeded it with
+  the intrinsic ratio, by at most 0.048 rad, spread across release depths.
+- We attribute this to the soft-contact geometry (assumption A1: the contact point moves as the rod turns) and
+  report it as a model–simulator gap. It exceeds the 0.02 rad sensing margin, so certificate violations are expected
+  in the test runs. They will be reported, not tuned away; this is part of Q4.
+- The original V1, V3, V4 and V5 results are reported as run (validation.json): breakaway within 0.3–2.7% of
+  nominal; creep below 1e-5 rad/s; first-slip travel changed by less than 0.025 rad with dt halved and by less than
+  0.01 rad with the stick/slip thresholds scaled ×0.5 or ×2.
