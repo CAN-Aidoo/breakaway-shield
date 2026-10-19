@@ -39,3 +39,8 @@ results/attrib_slide_test.json. Learned methods: 5 seeds, averaged per object; t
     17/1309 (≈1%); probes fall to 8.5–8.8, i.e. B2's level. B0S at r=1.2: 12.5% overshoot.
   - r_max = 1.3 (over-assumed): B5 overshoot 1.5% and 0.5%, probes 13.3–13.9.
   - So r_max trades measurements against overshoot monotonically; the shield degrades gracefully, not abruptly.
+
+## Confirmation set (run once, after the analysis above was committed in c620686)
+40 fresh objects (seed 47), r ~ U[1.0, 1.2], r_max 1.2. B5 vs B0: overshoot 0.5% vs 17.5% (−17 points, CI −30 to −6,
+p=0.010); within 98.5% vs 82.5% (p=0.017); probes 11.9 vs 14.0 (−2.1, CI −5.0 to 0.3, n.s.). B2: 8.7 probes, 10%
+overshoot. B5 violations 2/1977 certified steps. The test-set conclusions replicate.
