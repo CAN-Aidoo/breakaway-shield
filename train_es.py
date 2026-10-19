@@ -18,7 +18,7 @@ def evaluate(args):
 
 
 def main():
-    mode, seed = sys.argv[1], int(sys.argv[2]); iters = int(sys.argv[3]) if len(sys.argv) > 3 else 30
+    mode, seed = sys.argv[1], int(sys.argv[2]); iters = int(sys.argv[3]) if len(sys.argv) > 3 else 20
     ck = f"ckpt_{mode}_s{seed}.pkl"
     if os.path.exists(ck):
         st = pickle.load(open(ck, "rb")); rng, w, m, v, log, start = st["rng"], st["w"], st["m"], st["v"], st["log"], st["it"] + 1
@@ -30,7 +30,7 @@ def main():
         for it in range(start, iters):
             if time.time() > float(os.environ.get('DEADLINE', '1e12')):
                 sys.exit(3)
-            objs = [sample_object(rng) for _ in range(N_OBJ)]
+            objs = [dict(sample_object(rng), ratio=float(rng.uniform(1.0, 1.1)), rmax=1.1) for _ in range(N_OBJ)]
             seeds = [int(x) for x in rng.integers(0, 2**31, N_OBJ)]
             eps = rng.normal(size=(POP_PAIRS, w.size))
             jobs = [(mode, w + SIGMA * e, objs, seeds) for e in eps] + [(mode, w - SIGMA * e, objs, seeds) for e in eps]
