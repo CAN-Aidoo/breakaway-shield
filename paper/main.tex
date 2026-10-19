@@ -32,6 +32,11 @@
 
 \input{abstract.tex}
 
+\begin{figure}[h]\centering
+\includegraphics[width=\columnwidth]{fig_teaser.pdf}
+\caption{Measurements against safety at the largest static/kinetic ratio in the training range. The unshielded residual (B2) needs the fewest measurements but still overshoots. The shield-trained residual (B5) keeps overshoot near zero at about the model controller's measurement cost. The shielded model controller (B0S) pays far more measurements for the same safety. Bars: 95\% Clopper--Pearson intervals.}\label{fig:teaser}
+\end{figure}
+
 \section{Introduction}
 Residual learning keeps a hand-designed controller and learns a correction to its output \cite{johannink2019,silver2018}. In earlier work we applied it to gravitational pivoting with a parallel-jaw gripper that senses the object only through wrist motor current \cite{aidoo2026a}. The residual roughly halved the number of slow angle measurements per pivot, from 18.0 to 9.3, but it overshot targets more often. Almost every overshoot happened on one step, the step on which the rod first slipped \cite{aidoo2026b}. A hand-made guard repaired most of the damage, but it was designed after we had seen the test results and carried no guarantee.
 
@@ -52,6 +57,14 @@ This paper asks when a learned correction should defer to a friction model. We t
 \textbf{Pivoting and controlled sliding.} Gravitational pivoting has been planned open loop \cite{holladay2015}, controlled adaptively \cite{vina2016} and learned with tactile sensing \cite{toskov2022}. Dynamic in-hand sliding has been planned with soft-finger limit surfaces \cite{shi2017}, and prehensile pushing uses Coulomb motion cones \cite{chavandafle2015}. Soft-finger friction scales nonlinearly with load \cite{xydas1999,howe1996}. Kolbert et al.\ found that MuJoCo under-predicted a measured pivot \cite{kolbert2016}. None of these works isolates breakaway as the failure mode of a learned correction.
 
 \section{Breakaway Shields}\label{sec:theory}
+\begin{figure*}[t]\centering
+\includegraphics[width=\textwidth]{fig_mechanism.pdf}
+\caption{The breakaway problem. (a) A rod held off its centre of mass pivots under gravity; at the first slip friction drops from static to kinetic and the rod can run past the limit $\varphi_{\lim}$. (b) Energy balance from rest at $\varphi_0=0$: the rod stops where friction work (lines of slope $k=F/(rF_h)$) catches up with gravity work. With the same grip, $r=1.5$ stops far later than $r=1$. The shield requires the friction line to lie above the chord to $\varphi_{\lim}$. (c) The emulated friction law: static capacity until the relative speed exceeds $\omega_{\rm slip}$, kinetic capacity $\mu_t/r$ until it falls below $\omega_{\rm stick}$.}\label{fig:mech}
+\end{figure*}
+\begin{figure*}[t]\centering
+\includegraphics[width=\textwidth]{fig_method.pdf}
+\caption{Shielded residual control. A probe returns the measured state and the last grip at which the object was stuck. The model controller proposes an action and the residual policy corrects it. The shield passes certified actions (clipping grip up, or the hold down, to the bound) and falls back to the model step (defer) or stops (decline) when no certified action exists.}\label{fig:method}
+\end{figure*}
 \subsection{Pivoting}
 A rod of mass $m$ is held at offset $d$ from its centre of mass by two soft fingers with grip force $F$. Let $\varphi\in[0,\pi/2]$ be the depression of the centre of mass below horizontal. We assume (A1) a rigid rod rotating about the grip axis, (A2) torsional capacity linear in grip, $\tau_s=c_sF$ static and $\tau_k=c_sF/r$ kinetic, (A3) a commanded grip that is tracked and non-increasing during a release, (A4) no stored pad compliance and no damping, and (A5) gravity torque $mgd\cos\varphi$. The horizontal breakaway grip is $F_h=mgd/c_s$.
 
@@ -73,6 +86,11 @@ Sticking at $\varphi_0$ implies $c_sF_{\rm last}\ge mgd\cos\varphi_0$, so $F_h\l
 r \;<\; r^\ast(\varphi_{\lim})=\varphi_{\lim}/\sin\varphi_{\lim},\label{eq:feas}
 \end{equation}
 which is $1.04$ at $0.5$\,rad, $1.09$ at $0.7$\,rad and $1.19$ at $1.0$\,rad. Because the shield computes its floor from $F_{\rm last}$ rather than the unknown $F_h$, it can only shrink the step toward breakaway, by the factor $r_{\max}S/\cos\varphi_0$. Whenever that factor is below one, the search still reaches breakaway, so the shield's infeasible region is the physical one (Fig.~\ref{fig:feas}). The price is smaller steps, and so more measurements.
+
+\begin{figure}[t]\centering
+\includegraphics[width=\columnwidth]{fig_feasibility.pdf}
+\caption{Where a certified pivot from rest exists. Shaded blue: the shield's grip floor as a fraction of $F_{\rm last}$ (smaller means larger steps). Pink: no certified release. The shield's limit (dashed) lies on the physical limit $r^\ast$ (orange). For $r=1.1$, targets shallower than about 0.75\,rad are infeasible.}\label{fig:feas}
+\end{figure}
 
 \noindent\emph{Deferral rule.} At each step we compute the floor. If the floor is below $0.995F_{\rm last}$, the step is \emph{certified} and the commanded grip is $\max(F_{\rm policy},\text{floor})$, a clip that never lowers grip. Otherwise no certified release exists. We pre-specified two fallbacks: \emph{defer}, which drops the learned residual and takes the model controller's step (uncertified); and \emph{decline}, which stops and holds. We set $\varphi_{\lim}=|\theta^\ast|+0.05-0.02$\,rad, the overshoot threshold minus a 2.5$\sigma$ sensing margin.
 

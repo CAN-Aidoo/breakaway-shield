@@ -1,0 +1,56 @@
+\section{Results}\label{sec:results}
+\subsection{Simulator validation}\label{sec:valid}
+Before any test run we checked the stick--slip emulation (protocol checks V1--V6, Table~\ref{tab:valid}). Slow-ramp breakaway occurred within 0.3--2.7\% of the nominal grip, for both $r=1$ and $r=1.2$. The contact itself has a small static/kinetic gap: breakaway at 0.988 and sliding at 0.980 of nominal capacity, an intrinsic ratio of 1.008, so an emulated $r=1.2$ measured 1.206. Creep in the stuck phase was below $10^{-5}$\,rad/s. Halving the time step changed first-slip travel by less than 0.025\,rad, and scaling both switching thresholds by 0.5 or 2 changed it by less than 0.01\,rad.
+
+The direct test of Proposition~\ref{prop:pivot} held the rod at 1.01 times its measured breakaway grip and then released it to $q F_{\rm last}$ (Fig.~\ref{fig:bound}). Over 128 releases, simulated travel averaged 0.90--0.97 of the bound, so the bound is tight. However, 24 releases exceeded it, by at most 0.048\,rad, more than our 0.02\,rad sensing margin. We recorded this before testing (deviation D2) and expected certificate violations in the test runs.
+
+\begin{table}[t]\centering\footnotesize
+\caption{Simulator validation (validation objects only; recorded before any test data).}\label{tab:valid}
+\begin{tabular}{@{}lll@{}}\toprule
+Check & Quantity & Result\\\midrule
+V1 & slow-ramp breakaway / nominal & 1.003--1.027\\
+V2 & intrinsic static/kinetic ratio & 1.008 (1.006--1.010)\\
+V2 & emulated $r=1.2$, measured & 1.206\\
+V3 & creep at 1.05\,$F_h$ & $<10^{-5}$\,rad/s\\
+V4 & first-slip travel, $dt$ halved & $|\Delta|<0.025$\,rad\\
+V5 & thresholds $\times0.5$, $\times2$ & $|\Delta|<0.01$\,rad\\
+V6 & travel / Prop.~1 bound & 0.90--0.97 (mean)\\
+V6 & releases over bound & 24/128, max 0.048\,rad\\\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{figure}[t]\centering
+\includegraphics[width=\columnwidth]{fig_bound.pdf}
+\caption{Proposition~\ref{prop:pivot} against simulation (V6). Each point is one release from a measured stuck grip. Points above the solid line exceed the bound; points above the dashed line exceed it by more than the sensing margin.}\label{fig:bound}
+\end{figure}
+
+\input{tab_slide.tex}
+%PIVOT-TABLE
+
+\subsection{Q1: Does the shield keep the residual's savings?}
+\emph{Sliding} (Table~\ref{tab:slide}). The unshielded residual B2 needs far fewer measurements than the model controller: \N{slide-1.2-B2-probes} against \N{slide-1.2-B0-probes} at $r=1.2$, and 3.5--5.3 fewer at every $r$. The shield-trained residual B5 keeps only part of this. It saves \N{slide-1.0-B5-dprobes} probes at $r=1.0$ (95\% CI \N{slide-1.0-B5-dprobeslo} to \N{slide-1.0-B5-dprobeshi}, Holm $p=\N{slide-1.0-B5-pprobes}$) and \N{slide-1.1-B5-dprobes} at $r=1.1$ (not significant), and none at $r=1.2$ or 1.3. In sliding, then, the safety bought by the shield costs most of the residual's measurement saving. Two comparisons show where the cost goes. Shielding the unshielded residual only at test time (B4) needs 13.1--15.0 probes, against 10.8--12.1 for B5: a policy trained under the shield learns to work within it. Shielding the model controller (B0S) nearly doubles its probes, to 21--27. The shield shortens its holds, so the rod stops short and needs more pulses.
+%PIVOT-Q1
+
+\subsection{Q2: Does the shield bound overshoot?}
+\emph{Sliding.} The model controller overshoots \N{slide-1.0-B0-over}, \N{slide-1.1-B0-over}, \N{slide-1.2-B0-over} and \N{slide-1.3-B0-over}\% of episodes at $r=1.0$, 1.1, 1.2 and 1.3. The Coulomb prediction it uses for the hold underestimates the post-breakaway acceleration once $r>1$. The unshielded residual lowers this to 8--13\%. The shield-trained residual overshoots 1--2.5\% at every $r$, with 96--98\% of episodes ending within 5\,mm. Against B0, the reduction is \N{slide-1.2-B5-dovershoot} points at $r=1.2$ (CI \N{slide-1.2-B5-dovershootlo} to \N{slide-1.2-B5-dovershoothi}, Holm $p=\N{slide-1.2-B5-povershoot}$) and \N{slide-1.3-B5-dovershoot} at $r=1.3$ (Holm $p=\N{slide-1.3-B5-povershoot}$). At $r\le1.1$, where B0 overshoots less, the reduction is not significant after correction.
+
+The certificate itself, that a certified pulse travels no further than its limit, failed on \N{slide-1.0-B5-viol}, \N{slide-1.1-B5-viol}, \N{slide-1.2-B5-viol} and \N{slide-1.3-B5-viol} of about 1\,900 certified B5 pulses per $r$ (0.2--0.3\%). Section~\ref{sec:q4} explains these failures.
+%PIVOT-Q2
+
+\subsection{Q3: How much of the task admits a certified action?}
+%PIVOT-Q3
+\emph{Sliding} behaves as Proposition~\ref{prop:slide} predicts. Every shielded episode deferred exactly once, on its first pulse, while $F_{\rm stuck}$ was still unknown. No later pulse was infeasible, at any $r$ (B0S 160 of 160 episodes, B4 and B5 800 of 800 each).
+
+\subsection{Q4: Why do violations and overshoots occur?}\label{sec:q4}
+\emph{Attribution.} We replayed every test episode with a certificate violation and classified each violating step (an exploratory analysis, run after the pre-registered tests). For sliding, 10 of the 32 violating steps occurred at $r=1.3>r_{\max}$, where no guarantee applies. One followed a recorded stuck grip that was below the true arrest requirement: the rod had slipped by less than the 2.5\,mm motion threshold. The remaining 21 occurred with every assumption of Proposition~\ref{prop:slide} satisfied. All 21 were on three objects, all heavy ($m=0.178$--$0.192$\,kg). Direct probes on these objects found simulated travel up to 1.8 times the bound for short pulses released close to the stuck grip, where the bound is only a few millimetres. On light objects, travel stayed below the bound. We attribute these to MuJoCo's regularised friction, which lets a heavily loaded contact creep \cite{mujocoissue}; this is a simulator effect and not a sensing error.
+%PIVOT-Q4
+
+\emph{Mismatch.} Fig.~\ref{fig:mismatch} shows what happens when $r_{\max}$ is wrong. In sliding, assuming $r_{\max}=1.0$ when the true $r$ is 1.1 or 1.2 raises B5's overshoot to \N{slide-mis-r1.1_rmax1.0-B5-over} and \N{slide-mis-r1.2_rmax1.0-B5-over}\% and its violation rate to about 1\%. Its probes fall to \N{slide-mis-r1.2_rmax1.0-B5-probes}, the level of the unshielded residual. Assuming $r_{\max}=1.3$ keeps overshoot at \N{slide-mis-r1.1_rmax1.3-B5-over}--\N{slide-mis-r1.2_rmax1.3-B5-over}\% at a cost of \N{slide-mis-r1.2_rmax1.3-B5-probes} probes. The bound trades measurements for overshoot monotonically, and an underestimate degrades the shield gradually rather than abruptly.
+
+\begin{figure}[t]\centering
+\includegraphics[width=\columnwidth]{fig_mismatch.pdf}
+\caption{Overshoot under a wrong $r_{\max}$, for the shielded model controller (B0S) and the shield-trained residual (B5). Training and test-set shields use $r_{\max}=1.1$ (pivoting) and 1.2 (sliding).}\label{fig:mismatch}
+\end{figure}
+
+\emph{Confirmation.} The confirmation sets, 40 fresh objects per task with $r$ drawn from the training range, were run once after the test analysis had been committed. In sliding, B5 overshot \N{slide-conf-B5-over}\% of episodes against \N{slide-conf-B0-over}\% for B0 (Wilcoxon $p=\N{slide-conf-B5-povershoot}$), ended within 5\,mm in \N{slide-conf-B5-within}\% against \N{slide-conf-B0-within}\%, and used \N{slide-conf-B5-probes} probes against \N{slide-conf-B0-probes} (difference not significant). The test-set conclusions replicate.
+%PIVOT-CONF
