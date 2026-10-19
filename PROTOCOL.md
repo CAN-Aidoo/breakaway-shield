@@ -85,7 +85,41 @@ Pre-specified expectations, written down so they can be wrong:
 - E4: B5 overshoots no more often than B0 at every r.
 
 ## 7. Controlled sliding
-Specified in a dated deviation before any sliding test data exist.
+Specified in D1 below, before any sliding test data existed.
 
 ## Deviations
-(none yet)
+**D1 (2026-10-19): controlled-sliding protocol.** Written before any sliding test or confirmation data existed.
+Development used validation objects (seed 123) only.
+
+Task (slide_env.py): a vertical rod held at its centre of mass is lowered through the grasp by a target
+x* ~ U[10, 50] mm using release pulses. Each pulse is: release in 0.1 s to F_p, hold for tau, re-clamp to 30 N in
+0.3 s, measure (sensor sigma 0.5 mm, one probe each).
+
+Stick-slip is applied to the sliding coefficient: mu while stuck, mu/r while sliding (v_slip 5 mm/s,
+v_stick 1 mm/s).
+
+Model controller:
+- search: grip steps of x0.9 from the mu = 0.3 grip;
+- after motion: F_p = 0.95 F_stuck, with hold from the Coulomb (r = 1) prediction, corrected by the ratio of
+  observed to predicted travel.
+
+Timing shield (Proposition 2): while sliding, a <= g(1 - F/(r F_b)) with r F_b <= r_max F_stuck. The worst-case
+travel of the planned profile is integrated, and the hold is shortened (bisection) until the bound is within
+x_lim = remaining + 5 mm - 1.5 mm. If even a zero hold violates the bound, the state is infeasible and the shield
+defers to the model step. The decline fallback is omitted for sliding: infeasibility there comes from not yet
+knowing F_b during search, not from the physics, so declining would stop every episode at its first step.
+
+Training: r ~ U[1.0, 1.2], r_max = 1.2; same ES settings; 5 seeds x {residual, residualS}.
+
+Evaluation:
+- test set: object seed 31, 40 objects, at r in {1.0, 1.1, 1.2, 1.3}, r_max = 1.2;
+- methods: B0 model, B0S model + shield, B2 residual, B4 residual + shield at test only, B5 shield-trained;
+- mismatch: B0S and B5 with r_max in {1.0, 1.3} at r in {1.1, 1.2};
+- confirmation set: seed 47, 40 objects, r ~ U[1.0, 1.2].
+
+Metrics:
+- within 5 mm;
+- overshoot (slid > x* + 5 mm);
+- drops, probes, certified steps, violations.
+
+Statistics as in Section 6.
