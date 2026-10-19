@@ -103,6 +103,46 @@ def holm(ps):
     return adj.tolist()
 
 
+def fmt(x, d=2):
+    return "--" if x is None or (isinstance(x, float) and np.isnan(x)) else f"{x:.{d}f}"
+
+
+def write_numbers():
+    """Generic macro dump: \\N{pivot-1.1-B5-over} etc. Rates in percent (0 dp), probes 1 dp."""
+    L = [r"\makeatletter", r"\def\N#1{\@ifundefined{n@#1}{\textbf{??#1}}{\csname n@#1\endcsname}}"]
+    def put(k, v): L.append(r"\expandafter\def\csname n@%s\endcsname{%s}" % (k, v))
+    for task, D in OUT.items():
+        blocks = [(rv, d["summary"], d["vsB0"]) for rv, d in D["test"].items()]
+        if "confirm" in D: blocks.append(("conf", D["confirm"]["summary"], D["confirm"]["vsB0"]))
+        for rv, S, C in blocks:
+            for f, v in S.items():
+                k = f"{task}-{rv}-{f}"
+                put(k + "-within", fmt(100 * v["within"], 0)); put(k + "-over", fmt(100 * v["overshoot"], 0))
+                put(k + "-overlo", fmt(100 * v["overshoot_ci"][0], 0)); put(k + "-overhi", fmt(100 * v["overshoot_ci"][1], 0))
+                put(k + "-probes", fmt(v["probes"], 1)); put(k + "-tmin", fmt(v["t_min"], 1))
+                put(k + "-err", fmt(1000 * v["abs_err"] if task == "slide" else v["abs_err"], 1 if task == "slide" else 3))
+                put(k + "-viol", str(v["violations"])); put(k + "-cert", str(v["cert_steps"]))
+                put(k + "-violpct", fmt(100 * v["violations"] / max(1, v["cert_steps"]), 1))
+                put(k + "-defer", str(v["deferrals"])); put(k + "-clips", str(v["clips"]))
+                put(k + "-certfrac", fmt(100 * v["cert_frac"], 0)); put(k + "-declined", str(v["declined"]))
+                put(k + "-drops", str(v["drops"])); put(k + "-n", str(v["n"]))
+            for f, c in C.items():
+                k = f"{task}-{rv}-{f}"
+                for met in ("probes", "overshoot", "within"):
+                    sc = 100 if met != "probes" else 1; dd = 0 if met != "probes" else 1
+                    put(f"{k}-d{met}", fmt(sc * c[met]["diff"], dd))
+                    put(f"{k}-d{met}lo", fmt(sc * c[met]["ci"][0], dd)); put(f"{k}-d{met}hi", fmt(sc * c[met]["ci"][1], dd))
+                    p = c[met].get("p_holm", c[met]["p"])
+                    put(f"{k}-p{met}", ("<0.001" if p < 0.001 else fmt(p, 3)))
+        for key, S in D.get("mismatch", {}).items():
+            for f, v in S.items():
+                k = f"{task}-mis-{key}-{f}"
+                put(k + "-over", fmt(100 * v["overshoot"], 0)); put(k + "-probes", fmt(v["probes"], 1))
+                put(k + "-violpct", fmt(100 * v["violations"] / max(1, v["cert_steps"]), 1)); put(k + "-within", fmt(100 * v["within"], 0))
+    L.append(r"\makeatother")
+    open("paper/numbers5.tex", "w").write("\n".join(L) + "\n")
+
+
 def main():
     for task in ("pivot", "slide"):
         T = load(task, "test")
@@ -132,6 +172,7 @@ def main():
             OUT[task]["confirm"] = dict(summary=summarise(task, Cf),
                                         vsB0={f: compare(task, Cf, f) for f in {family(r["method"]) for r in Cf} if f != "B0"})
     json.dump(OUT, open(f"{R}/summary5.json", "w"), indent=1)
+    write_numbers()
     print(json.dumps({t: {rv: {f: (round(v["within"], 2), round(v["overshoot"], 2), round(v["probes"], 1), v["violations"], v["cert_steps"])
                                for f, v in d["summary"].items()} for rv, d in OUT[t]["test"].items()} for t in OUT}, indent=1))
 

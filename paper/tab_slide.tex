@@ -1,0 +1,18 @@
+\begin{table*}[t]\centering\footnotesize
+\caption{Sliding test set (40 objects; learned methods: 5 seeds, 200 episodes per cell). Within: final error $\le$5\,mm and held. Over: travel past the target by more than 5\,mm. Probes: position measurements per episode. Shield $r_{\max}=1.2$.}\label{tab:slide}
+\setlength{\tabcolsep}{3.2pt}
+\begin{tabular}{llrrrrrrrrrrrr}
+\toprule
+ & & \multicolumn{3}{c}{$r=1.0$} & \multicolumn{3}{c}{$r=1.1$} & \multicolumn{3}{c}{$r=1.2$} & \multicolumn{3}{c}{$r=1.3$}\\
+\cmidrule(lr){3-5}\cmidrule(lr){6-8}\cmidrule(lr){9-11}\cmidrule(lr){12-14}
+ID & method & within & over & probes & within & over & probes & within & over & probes & within & over & probes\\
+\midrule
+B0 & model & 82 & 15 & 14.7 & 90 & 8 & 13.5 & 70 & 30 & 11.4 & 72 & 28 & 11.5\\
+B0S & model + shield & 78 & \textbf{0} & 24.2 & 65 & 2 & 26.6 & 75 & 2 & 21.0 & 68 & 5 & 21.1\\
+\midrule
+B2 & residual & 90 & 8 & 9.3 & 90 & 10 & 8.2 & 89 & 11 & 7.4 & 86 & 13 & 7.9\\
+B4 & residual, shield at test & 94 & 2 & 13.9 & 90 & 2 & 14.5 & 92 & \textbf{0} & 15.0 & 94 & \textbf{1} & 13.1\\
+B5 & shield-trained residual & 98 & 2 & 12.1 & 98 & \textbf{1} & 11.9 & 96 & 2 & 11.4 & 96 & 2 & 10.8\\
+\bottomrule
+\end{tabular}
+\end{table*}

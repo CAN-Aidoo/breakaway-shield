@@ -162,7 +162,7 @@ class SlideEpisode:
         return self.r.slid() + self.rng.normal(0, SIG)
 
     def run(self, mode="model", policy=None):
-        r, target = self.r, self.o["target"]
+        r, target = self.r, self.o["target"]; self.log = []
         x0 = self.measure(); x = x0
         m_est = self.o["m"] * self.rng.uniform(0.9, 1.1)          # weight from wrist sensing, +-10%
         F0 = min(FMAX, m_est * G / (2 * 0.3) / SEARCH)              # first pulse at the mu = 0.3 grip
@@ -206,6 +206,8 @@ class SlideEpisode:
             if cert is not None:
                 n_cert += 1
                 if dx_true > cert: n_viol += 1
+            self.log.append(dict(k=k, F=F_cmd, tau=tau_cmd, cert=cert, dx=dx_true, F_stuck=F_stuck, moved=moved,
+                                 x_true=xb, x_meas=x))   # diagnostics only; no effect on control
             xn = self.measure()
             last_dx = xn - x
             if moved and pred_dx is not None and last_dx > 0:
