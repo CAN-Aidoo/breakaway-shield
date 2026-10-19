@@ -57,7 +57,7 @@ OBS_DIM = 8
 class PivotEpisode:
     def __init__(self, obj, rng, sigma_meas=0.008, meas="surrogate"):
         self.o = obj; self.rng = rng; self.sig = sigma_meas; self.meas_mode = meas
-        self.r = Rig(obj["m"], obj["d"], obj["mu"], obj["mut"])
+        self.r = Rig(obj["m"], obj["d"], obj["mu"], obj["mut"], ratio=obj.get("ratio", 1.0))
         if meas == "current":
             try:
                 from exp_c2 import initial_probe, KT_NOM

@@ -4,9 +4,20 @@ from mj_env import build, rod_angle
 
 
 class Rig:
-    def __init__(self, m, d, mu, mut, setup=30.0):
+    def __init__(self, m, d, mu, mut, setup=30.0, ratio=1.0, v_slip=0.05, v_stick=0.01):
+        """ratio = mu_t,static / mu_t,kinetic (torsional). ratio == 1 reproduces papers 1-2 exactly.
+        Stick-slip: torsional friction of every contact geom is mut while the rod is stuck relative to
+        the palm and mut/ratio once its relative angular speed exceeds v_slip; it re-sticks below
+        v_stick (hysteresis avoids chatter)."""
         self.model, self.data = build(m, d, mu, mut)
         M, D = self.model, self.data
+        self.ratio, self.v_slip, self.v_stick = ratio, v_slip, v_stick
+        self.mut_s, self.mut_k = mut, mut / ratio
+        self.sliding = False
+        self.n_breakaway = 0
+        self._gids = [M.geom(g).id for g in ("lpad", "rpad", "rodg")]
+        self._rod = M.body("rod").id
+        self._vel = np.zeros(6)
         for j in ("lj", "rj"):
             D.qpos[M.joint(j).qposadr[0]] = 0.03 - 0.01 - 0.006 + 0.0002
         D.ctrl[:] = [0, setup, setup]
@@ -15,9 +26,26 @@ class Rig:
         self.step(0.8)
         self.jid = M.joint("wrist").qposadr[0]; self.vid = M.joint("wrist").dofadr[0]
 
+    def rel_omega(self):
+        """Rod angular velocity about the pad axis (world x) relative to the palm."""
+        mujoco.mj_objectVelocity(self.model, self.data, mujoco.mjtObj.mjOBJ_BODY, self._rod, self._vel, 0)
+        return float(self._vel[0] - self.data.qvel[self.vid])
+
+    def mj1(self):
+        """One physics step with the stick-slip friction state machine (no-op when ratio == 1)."""
+        if self.ratio != 1.0 and hasattr(self, "vid"):
+            w = abs(self.rel_omega())
+            if not self.sliding and w > self.v_slip:
+                self.sliding = True; self.n_breakaway += 1
+                self.model.geom_friction[self._gids, 1] = self.mut_k
+            elif self.sliding and w < self.v_stick:
+                self.sliding = False
+                self.model.geom_friction[self._gids, 1] = self.mut_s
+        mujoco.mj_step(self.model, self.data)
+
     def step(self, secs):
         for _ in range(int(round(secs / self.model.opt.timestep))):
-            mujoco.mj_step(self.model, self.data)
+            self.mj1()
         self.t_sim += secs
 
     def held(self):
@@ -35,7 +63,7 @@ class Rig:
         F0 = self.grip; n = int(secs / self.model.opt.timestep)
         for k in range(n):
             self.data.ctrl[1:] = F0 + (F_to - F0) * (k + 1) / n
-            mujoco.mj_step(self.model, self.data)
+            self.mj1()
         self.grip = F_to; self.t_sim += secs
         self.step(hold)
 
@@ -44,7 +72,7 @@ class Rig:
         F0 = self.grip; n = int(ramp_s / self.model.opt.timestep)
         for k in range(n):
             self.data.ctrl[1:] = F0 + (F - F0) * (k + 1) / n
-            mujoco.mj_step(self.model, self.data)
+            self.mj1()
         self.t_sim += ramp_s
         self.grip = F; self.step(0.5)
 
@@ -54,7 +82,7 @@ class Rig:
         psi = np.zeros(n); dpsi = np.zeros(n); tau = np.zeros(n)
         for k in range(n):
             D.ctrl[0] = -amp * (1 - np.cos(w * k * M.opt.timestep))
-            mujoco.mj_step(M, D)
+            self.mj1()
             psi[k] = D.qpos[self.jid]; dpsi[k] = D.qvel[self.vid]; tau[k] = D.actuator_force[0]
         D.ctrl[0] = 0.0; self.step(0.3)
         self.t_sim += n * M.opt.timestep
@@ -74,7 +102,7 @@ def dither_release(rig, F_from, rate, target, est_fn, lead=0.0, amp=0.04, hz=1.0
         t = k * dt
         D.ctrl[0] = -amp * (1 - np.cos(w * t))
         F = max(F_min, F_from - rate * t); D.ctrl[1:] = F
-        mujoco.mj_step(M, D); k += 1
+        rig.mj1(); k += 1
         buf["psi"].append(D.qpos[rig.jid]); buf["dpsi"].append(D.qvel[rig.vid])
         buf["ddcmd"].append(-amp * w * w * np.cos(w * t)); buf["tau"].append(D.actuator_force[0])
         buf["ddact"].append(0.0)
