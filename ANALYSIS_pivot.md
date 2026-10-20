@@ -36,7 +36,7 @@ leaves most rods short of the target.
 - Observed: B0Sd declined at the very first step on exactly 20 of 40 objects at r = 1.0 and at r = 1.1, a direct
   match. A further 14 (r=1.0) and 11 (r=1.1) declined later (after 5–28 steps), once the rod had moved and the
   remaining arc became uncertifiable. In total B0Sd declined on 85, 80, 77.5, 55% of objects.
-- With the defer fallback, 56–61% of steps were certified (B0S, B4, B5).
+- With the defer fallback, 53–61% of steps were certified (B0S, B4, B5).
 
 ## Q4
 - At r = 1.2 > r_max, violations rise roughly tenfold (B5 4.9% of certified steps) and decline-overshoot rises to
@@ -49,3 +49,8 @@ leaves most rods short of the target.
   - So in pivoting a smaller r_max issues wrong certificates, yet overshoots *less* than a larger one, because a
     larger r_max hands more steps back to the overshooting model step. With the defer fallback, a correct
     certificate does not imply a safe episode.
+
+## Confirmation set (run once, after the analysis above was committed in 08b08c7)
+40 fresh objects (seed 47), r ~ U[1.0, 1.1], r_max 1.1. B0: 37.5% overshoot, 15.2 probes. B5: 36% overshoot (n.s.),
+17.8 probes (+2.6, CI 1.3–4.1, p<0.001). B2: 8.4 probes (−6.8), 42.5% overshoot. B0Sd: 0% overshoot, 15% within,
+declined on 31/40. No B5 certificate violated (0/1709). The test-set conclusions replicate.

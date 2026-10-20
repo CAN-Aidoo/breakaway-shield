@@ -104,7 +104,15 @@ def holm(ps):
 
 
 def fmt(x, d=2):
-    return "--" if x is None or (isinstance(x, float) and np.isnan(x)) else f"{x:.{d}f}"
+    if x is None or (isinstance(x, float) and np.isnan(x)): return "--"
+    out = f"{x:.{d}f}"
+    return ("\\textminus{}" + out[1:]) if out.startswith("-") else out
+
+
+def pct(x):
+    """percent with one decimal only when needed (e.g. 12.5), else integer"""
+    v = 100 * x
+    return fmt(v, 0) if abs(v - round(v)) < 1e-9 else fmt(v, 1)
 
 
 def write_numbers():
@@ -117,7 +125,7 @@ def write_numbers():
         for rv, S, C in blocks:
             for f, v in S.items():
                 k = f"{task}-{rv}-{f}"
-                put(k + "-within", fmt(100 * v["within"], 0)); put(k + "-over", fmt(100 * v["overshoot"], 0))
+                put(k + "-within", pct(v["within"])); put(k + "-over", pct(v["overshoot"]))
                 put(k + "-overlo", fmt(100 * v["overshoot_ci"][0], 0)); put(k + "-overhi", fmt(100 * v["overshoot_ci"][1], 0))
                 put(k + "-probes", fmt(v["probes"], 1)); put(k + "-tmin", fmt(v["t_min"], 1))
                 put(k + "-err", fmt(1000 * v["abs_err"] if task == "slide" else v["abs_err"], 1 if task == "slide" else 3))
@@ -133,12 +141,12 @@ def write_numbers():
                     put(f"{k}-d{met}", fmt(sc * c[met]["diff"], dd))
                     put(f"{k}-d{met}lo", fmt(sc * c[met]["ci"][0], dd)); put(f"{k}-d{met}hi", fmt(sc * c[met]["ci"][1], dd))
                     p = c[met].get("p_holm", c[met]["p"])
-                    put(f"{k}-p{met}", ("<0.001" if p < 0.001 else fmt(p, 3)))
+                    put(f"{k}-p{met}", ("{<}0.001" if p < 0.001 else "=" + fmt(p, 3)))
         for key, S in D.get("mismatch", {}).items():
             for f, v in S.items():
                 k = f"{task}-mis-{key}-{f}"
-                put(k + "-over", fmt(100 * v["overshoot"], 0)); put(k + "-probes", fmt(v["probes"], 1))
-                put(k + "-violpct", fmt(100 * v["violations"] / max(1, v["cert_steps"]), 1)); put(k + "-within", fmt(100 * v["within"], 0))
+                put(k + "-over", pct(v["overshoot"])); put(k + "-probes", fmt(v["probes"], 1))
+                put(k + "-violpct", fmt(100 * v["violations"] / max(1, v["cert_steps"]), 1)); put(k + "-within", pct(v["within"]))
     L.append(r"\makeatother")
     open("paper/numbers5.tex", "w").write("\n".join(L) + "\n")
 

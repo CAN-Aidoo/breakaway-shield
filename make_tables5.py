@@ -1,6 +1,12 @@
 """Tables for Paper 5 from results/summary5.json -> paper/tab_<task>.tex"""
 import json
 
+
+def pct(x):
+    v = 100 * x
+    return f"{v:.0f}" if abs(v - round(v)) < 1e-9 else f"{v:.1f}"
+
+
 D = json.load(open("results/summary5.json"))
 ORDER = {"pivot": ["B0", "B1", "B0S", "B0Sd", "B2", "B3", "B4", "B5", "B5d"], "slide": ["B0", "B0S", "B2", "B4", "B5"]}
 DESC = {"B0": "model", "B1": "model + quasi-static guard", "B0S": "model + shield", "B0Sd": "model + shield (decline)",
@@ -27,9 +33,9 @@ for task in D:
         best_over = {r: min(T[r]["summary"][g]["overshoot"] for g in fams) for r in rs}
         for r in rs:
             v = T[r]["summary"][f]
-            ov = f"{100 * v['overshoot']:.0f}"
+            ov = pct(v['overshoot'])
             if abs(v["overshoot"] - best_over[r]) < 1e-12: ov = r"\textbf{" + ov + "}"
-            cells += [f"{100 * v['within']:.0f}", ov, f"{v['probes']:.1f}"]
+            cells += [pct(v['within']), ov, f"{v['probes']:.1f}"]
         L.append(f"{f} & {DESC[f]} & " + " & ".join(cells) + r"\\")
         if f in ("B0Sd", "B0S") and task == "slide" or f == "B0Sd": L.append(r"\midrule")
     L += [r"\bottomrule", r"\end{tabular}", r"\end{table*}"]

@@ -84,16 +84,24 @@ ax.set_xlim(0, m); ax.set_ylim(0, m); ax.set_xlabel("Prop. 1 bound on first-slip
 ax.set_ylabel("simulated travel (rad)"); style(ax); ax.legend(frameon=False, fontsize=6.2, loc="upper left")
 fig.tight_layout(pad=0.3); fig.savefig("paper/fig_bound.pdf"); plt.close(fig)
 
-# ---- mismatch
+# ---- mismatch: B5 overshoot by true r, for under-assumed / matched / over-assumed r_max
+RM = {"pivot": ("1.0", "1.1", "1.2"), "slide": ("1.0", "1.2", "1.3")}
+SEQ = ("#a9c6ef", "#2a78d6", "#123f7a")
 if any("mismatch" in D[t] for t in TASKS):
-    fig, axs = plt.subplots(1, len(TASKS), figsize=(3.45, 1.7), squeeze=False); axs = axs[0]
+    fig, axs = plt.subplots(1, len(TASKS), figsize=(3.45, 1.75), squeeze=False); axs = axs[0]
     for ax, t in zip(axs, TASKS):
-        M = D[t].get("mismatch", {})
-        keys = sorted(M); xs = np.arange(len(keys))
-        for k, (f, off) in enumerate((("B0S", -0.18), ("B5", 0.18))):
-            ax.bar(xs + off, [100 * M[key][f]["overshoot"] for key in keys], 0.34, color=COL[f], label=LAB[f], edgecolor="white", lw=0.6)
-        ax.set_xticks(xs); ax.set_xticklabels([key.replace("_rmax", "\n$r_{\\max}$=").replace("r", "$r$=", 1) for key in keys], fontsize=5.6)
-        ax.set_title(TNAME[t], fontsize=7.5, pad=3); style(ax)
-    axs[0].set_ylabel("overshoot (%)"); axs[0].legend(frameon=False, fontsize=5.8, loc="upper left")
-    fig.tight_layout(pad=0.3); fig.savefig("paper/fig_mismatch.pdf"); plt.close(fig)
+        M = D[t].get("mismatch", {}); rs = sorted({k.split("_")[0][1:] for k in M}, key=float); xs = np.arange(len(rs))
+        for k, rm in enumerate(RM[t]):
+            vals = []
+            for r in rs:
+                key = f"r{r}_rmax{rm}"
+                v = M[key]["B5"] if key in M else D[t]["test"][r]["summary"]["B5"]
+                vals.append(100 * v["overshoot"])
+            lab = ("$r_{\\max}$ under-assumed", "$r_{\\max}$ as trained", "$r_{\\max}$ over-assumed")[k]
+            ax.bar(xs + (k - 1) * 0.27, vals, 0.25, color=SEQ[k], label=lab, edgecolor="white", lw=0.5)
+        ax.set_xticks(xs); ax.set_xticklabels([f"$r={r}$" for r in rs]); ax.set_title(TNAME[t], fontsize=7.5, pad=3); style(ax)
+    axs[0].set_ylabel("B5 overshoot (%)")
+    h, l = axs[0].get_legend_handles_labels()
+    fig.legend(h, l, loc="upper center", ncol=3, frameon=False, fontsize=6.0, bbox_to_anchor=(0.5, 1.0), handlelength=1.2)
+    fig.tight_layout(pad=0.3, rect=(0, 0, 1, 0.86)); fig.savefig("paper/fig_mismatch.pdf"); plt.close(fig)
 print("result figures written")

@@ -20,7 +20,7 @@ results/attrib_slide_test.json. Learned methods: 5 seeds, averaged per object; t
   r=1.3 −25 (Holm p=0.015). At r=1.0/1.1 the reduction is −13/−6.5 points, not significant after Holm.
 - B5 vs B0 within-band: +15.5, +8.5, +26.5, +23.5 points.
 - Certificate violations (true pulse travel > certified limit): B5 4/2020, 3/1984, 5/1886, 6/1752 certified steps
-  (0.2–0.3%); B4 4/2382, 3/2507, 1/2597, 2/2222; B0S 0/887, 1/982, 1/761, 2/765.
+  (0.15–0.35%); B4 4/2382, 3/2507, 1/2597, 2/2222; B0S 0/887, 1/982, 1/761, 2/765.
 
 ## Q3 feasibility (sliding)
 - Every shielded episode deferred exactly once, on its first pulse (F_stuck still unknown); no other pulse was

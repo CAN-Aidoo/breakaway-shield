@@ -7,6 +7,10 @@
 \citation{aidoo2026a}
 \citation{aidoo2026b}
 \citation{alshiekh2018}
+\@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces Measurements against safety at the largest static/kinetic ratio in the training range (40 test objects; bars: 95\% Clopper--Pearson intervals). In sliding (right) the shield-trained residual (B5) keeps overshoot near zero at about the model controller's measurement cost. In pivoting (left) half of the targets admit no certified release: with the defer fallback the shield cannot stop overshoot, and only declining (B0Sd, B5d) does so, by stopping short.}}{1}{figure.caption.1}\protected@file@percent }
+\providecommand*\caption@xref[2]{\@setref\relax\@undefined{#1}}
+\newlabel{fig:teaser}{{1}{1}{Measurements against safety at the largest static/kinetic ratio in the training range (40 test objects; bars: 95\% Clopper--Pearson intervals). In sliding (right) the shield-trained residual (B5) keeps overshoot near zero at about the model controller's measurement cost. In pivoting (left) half of the targets admit no certified release: with the defer fallback the shield cannot stop overshoot, and only declining (B0Sd, B5d) does so, by stopping short}{figure.caption.1}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {I}Introduction}{1}{section.1}\protected@file@percent }
 \citation{johannink2019}
 \citation{silver2018}
 \citation{ankile2024}
@@ -22,11 +26,6 @@
 \citation{ressafe2026}
 \citation{johansson2025}
 \citation{shuto2026}
-\@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces Measurements against safety at the largest static/kinetic ratio in the training range. The unshielded residual (B2) needs the fewest measurements but still overshoots. The shield-trained residual (B5) keeps overshoot near zero at about the model controller's measurement cost. The shielded model controller (B0S) pays far more measurements for the same safety. Bars: 95\% Clopper--Pearson intervals.}}{1}{figure.caption.1}\protected@file@percent }
-\providecommand*\caption@xref[2]{\@setref\relax\@undefined{#1}}
-\newlabel{fig:teaser}{{1}{1}{Measurements against safety at the largest static/kinetic ratio in the training range. The unshielded residual (B2) needs the fewest measurements but still overshoots. The shield-trained residual (B5) keeps overshoot near zero at about the model controller's measurement cost. The shielded model controller (B0S) pays far more measurements for the same safety. Bars: 95\% Clopper--Pearson intervals}{figure.caption.1}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {I}Introduction}{1}{section.1}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {II}Related Work}{1}{section.2}\protected@file@percent }
 \citation{holladay2015}
 \citation{vina2016}
 \citation{toskov2022}
@@ -35,22 +34,22 @@
 \citation{xydas1999}
 \citation{howe1996}
 \citation{kolbert2016}
+\citation{aidoo2026b}
 \@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces The breakaway problem. (a) A rod held off its centre of mass pivots under gravity; at the first slip friction drops from static to kinetic and the rod can run past the limit $\varphi _{\lim }$. (b) Energy balance from rest at $\varphi _0=0$: the rod stops where friction work (lines of slope $k=F/(rF_h)$) catches up with gravity work. With the same grip, $r=1.5$ stops far later than $r=1$. The shield requires the friction line to lie above the chord to $\varphi _{\lim }$. (c) The emulated friction law: static capacity until the relative speed exceeds $\omega _{\rm  slip}$, kinetic capacity $\mu _t/r$ until it falls below $\omega _{\rm  stick}$.}}{2}{figure.caption.2}\protected@file@percent }
 \newlabel{fig:mech}{{2}{2}{The breakaway problem. (a) A rod held off its centre of mass pivots under gravity; at the first slip friction drops from static to kinetic and the rod can run past the limit $\varphi _{\lim }$. (b) Energy balance from rest at $\varphi _0=0$: the rod stops where friction work (lines of slope $k=F/(rF_h)$) catches up with gravity work. With the same grip, $r=1.5$ stops far later than $r=1$. The shield requires the friction line to lie above the chord to $\varphi _{\lim }$. (c) The emulated friction law: static capacity until the relative speed exceeds $\omega _{\rm slip}$, kinetic capacity $\mu _t/r$ until it falls below $\omega _{\rm stick}$}{figure.caption.2}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces Shielded residual control. A probe returns the measured state and the last grip at which the object was stuck. The model controller proposes an action and the residual policy corrects it. The shield passes certified actions (clipping grip up, or the hold down, to the bound) and falls back to the model step (defer) or stops (decline) when no certified action exists.}}{2}{figure.caption.3}\protected@file@percent }
-\newlabel{fig:method}{{3}{2}{Shielded residual control. A probe returns the measured state and the last grip at which the object was stuck. The model controller proposes an action and the residual policy corrects it. The shield passes certified actions (clipping grip up, or the hold down, to the bound) and falls back to the model step (defer) or stops (decline) when no certified action exists}{figure.caption.3}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {II}Related Work}{2}{section.2}\protected@file@percent }
 \@writefile{toc}{\contentsline {section}{\numberline {III}Breakaway Shields}{2}{section.3}\protected@file@percent }
 \newlabel{sec:theory}{{III}{2}{Breakaway Shields}{section.3}{}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {A}Pivoting}{2}{subsection.3.1}\protected@file@percent }
 \newlabel{prop:pivot}{{1}{2}{}{proposition.1}{}}
 \newlabel{eq:shield}{{1}{2}{}{equation.3.1}{}}
-\citation{aidoo2026b}
 \citation{todorov2012}
 \citation{aidoo2026a}
 \citation{aidoo2026b}
 \citation{mujocoissue}
 \citation{aidoo2026b}
-\citation{aidoo2026b}
+\@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces Shielded residual control. A probe returns the measured state and the last grip at which the object was stuck. The model controller proposes an action and the residual policy corrects it. The shield passes certified actions (clipping grip up, or the hold down, to the bound) and falls back to the model step (defer) or stops (decline) when no certified action exists.}}{3}{figure.caption.3}\protected@file@percent }
+\newlabel{fig:method}{{3}{3}{Shielded residual control. A probe returns the measured state and the last grip at which the object was stuck. The model controller proposes an action and the residual policy corrects it. The shield passes certified actions (clipping grip up, or the hold down, to the bound) and falls back to the model step (defer) or stops (decline) when no certified action exists}{figure.caption.3}{}}
 \@writefile{lof}{\contentsline {figure}{\numberline {4}{\ignorespaces Where a certified pivot from rest exists. Shaded blue: the shield's grip floor as a fraction of $F_{\rm  last}$ (smaller means larger steps). Pink: no certified release. The shield's limit (dashed) lies on the physical limit $r^\ast $ (orange). For $r=1.1$, targets shallower than about 0.75\,rad are infeasible.}}{3}{figure.caption.4}\protected@file@percent }
 \newlabel{fig:feas}{{4}{3}{Where a certified pivot from rest exists. Shaded blue: the shield's grip floor as a fraction of $F_{\rm last}$ (smaller means larger steps). Pink: no certified release. The shield's limit (dashed) lies on the physical limit $r^\ast $ (orange). For $r=1.1$, targets shallower than about 0.75\,rad are infeasible}{figure.caption.4}{}}
 \newlabel{eq:feas}{{2}{3}{Pivoting}{equation.3.2}{}}
@@ -58,26 +57,31 @@
 \newlabel{prop:slide}{{2}{3}{}{proposition.2}{}}
 \@writefile{toc}{\contentsline {section}{\numberline {IV}Experimental Setup}{3}{section.4}\protected@file@percent }
 \newlabel{sec:setup}{{IV}{3}{Experimental Setup}{section.4}{}}
-\@writefile{lot}{\contentsline {table}{\numberline {1}{\ignorespaces Simulator validation (validation objects only; recorded before any test data).}}{4}{table.caption.5}\protected@file@percent }
-\newlabel{tab:valid}{{1}{4}{Simulator validation (validation objects only; recorded before any test data)}{table.caption.5}{}}
+\citation{aidoo2026b}
 \@writefile{toc}{\contentsline {section}{\numberline {V}Results}{4}{section.5}\protected@file@percent }
 \newlabel{sec:results}{{V}{4}{Results}{section.5}{}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {A}Simulator validation}{4}{subsection.5.1}\protected@file@percent }
 \newlabel{sec:valid}{{A}{4}{Simulator validation}{subsection.5.1}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {B}Q1: Does the shield keep the residual's savings?}{4}{subsection.5.2}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {1}{\ignorespaces Simulator validation (validation objects only; recorded before any test data).}}{4}{table.caption.5}\protected@file@percent }
+\newlabel{tab:valid}{{1}{4}{Simulator validation (validation objects only; recorded before any test data)}{table.caption.5}{}}
 \@writefile{lof}{\contentsline {figure}{\numberline {5}{\ignorespaces Proposition~\ref {prop:pivot} against simulation (V6). Each point is one release from a measured stuck grip. Points above the solid line exceed the bound; points above the dashed line exceed it by more than the sensing margin.}}{4}{figure.caption.6}\protected@file@percent }
 \newlabel{fig:bound}{{5}{4}{Proposition~\ref {prop:pivot} against simulation (V6). Each point is one release from a measured stuck grip. Points above the solid line exceed the bound; points above the dashed line exceed it by more than the sensing margin}{figure.caption.6}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {C}Q2: Does the shield bound overshoot?}{4}{subsection.5.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {B}Q1: Does the shield keep the residual's savings?}{4}{subsection.5.2}\protected@file@percent }
 \citation{mujocoissue}
 \@writefile{lot}{\contentsline {table}{\numberline {2}{\ignorespaces Sliding test set (40 objects; learned methods: 5 seeds, 200 episodes per cell). Within: final error $\le $5\,mm and held. Over: travel past the target by more than 5\,mm. Probes: position measurements per episode. Shield $r_{\max }=1.2$.}}{5}{table.caption.7}\protected@file@percent }
 \newlabel{tab:slide}{{2}{5}{Sliding test set (40 objects; learned methods: 5 seeds, 200 episodes per cell). Within: final error $\le $5\,mm and held. Over: travel past the target by more than 5\,mm. Probes: position measurements per episode. Shield $r_{\max }=1.2$}{table.caption.7}{}}
 \@writefile{lot}{\contentsline {table}{\numberline {3}{\ignorespaces Pivoting test set (40 objects; learned methods: 5 seeds, 200 episodes per cell). Within: final error $\le $0.05\,rad and held. Over: overshoot past the target by more than 0.05\,rad. Probes: angle measurements per pivot. Shield $r_{\max }=1.1$.}}{5}{table.caption.8}\protected@file@percent }
 \newlabel{tab:pivot}{{3}{5}{Pivoting test set (40 objects; learned methods: 5 seeds, 200 episodes per cell). Within: final error $\le $0.05\,rad and held. Over: overshoot past the target by more than 0.05\,rad. Probes: angle measurements per pivot. Shield $r_{\max }=1.1$}{table.caption.8}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {C}Q2: Does the shield bound overshoot?}{5}{subsection.5.3}\protected@file@percent }
 \@writefile{toc}{\contentsline {subsection}{\numberline {D}Q3: How much of the task admits a certified action?}{5}{subsection.5.4}\protected@file@percent }
 \@writefile{toc}{\contentsline {subsection}{\numberline {E}Q4: Why do violations and overshoots occur?}{5}{subsection.5.5}\protected@file@percent }
 \newlabel{sec:q4}{{E}{5}{Q4: Why do violations and overshoots occur?}{subsection.5.5}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {VI}Limitations}{5}{section.6}\protected@file@percent }
-\newlabel{sec:limits}{{VI}{5}{Limitations}{section.6}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {6}{\ignorespaces Overshoot rate (top) and probes per episode (bottom) against the true static/kinetic ratio $r$, on the test sets. Dotted vertical line: the shield's assumed $r_{\max }$. In sliding the shield-trained residual (B5) stays near zero overshoot across $r$. In pivoting only the decline fallbacks (B0Sd, B5d) prevent overshoot, by stopping short.}}{6}{figure.caption.9}\protected@file@percent }
+\newlabel{fig:vsr}{{6}{6}{Overshoot rate (top) and probes per episode (bottom) against the true static/kinetic ratio $r$, on the test sets. Dotted vertical line: the shield's assumed $r_{\max }$. In sliding the shield-trained residual (B5) stays near zero overshoot across $r$. In pivoting only the decline fallbacks (B0Sd, B5d) prevent overshoot, by stopping short}{figure.caption.9}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {7}{\ignorespaces Overshoot of the shield-trained residual (B5, defer fallback) when the assumed $r_{\max }$ is wrong. Pivoting: $r_{\max }=1.0$, 1.1 (as trained) and 1.2. Sliding: 1.0, 1.2 (as trained) and 1.3. In sliding an underestimate raises overshoot and an overestimate lowers it. In pivoting the order reverses, because a larger $r_{\max }$ defers more steps to the overshooting model controller.}}{6}{figure.caption.10}\protected@file@percent }
+\newlabel{fig:mismatch}{{7}{6}{Overshoot of the shield-trained residual (B5, defer fallback) when the assumed $r_{\max }$ is wrong. Pivoting: $r_{\max }=1.0$, 1.1 (as trained) and 1.2. Sliding: 1.0, 1.2 (as trained) and 1.3. In sliding an underestimate raises overshoot and an overestimate lowers it. In pivoting the order reverses, because a larger $r_{\max }$ defers more steps to the overshooting model controller}{figure.caption.10}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {VI}Limitations}{6}{section.6}\protected@file@percent }
+\newlabel{sec:limits}{{VI}{6}{Limitations}{section.6}{}}
 \citation{xydas1999}
 \citation{dieterich1972}
 \citation{mujocoissue}
@@ -85,11 +89,6 @@
 \citation{kolbert2016}
 \bibstyle{unsrt}
 \bibcite{johannink2019}{1}
-\@writefile{lof}{\contentsline {figure}{\numberline {6}{\ignorespaces Overshoot rate (top) and probes per episode (bottom) against the true static/kinetic ratio $r$, on the test sets. Dotted vertical line: the shield's assumed $r_{\max }$. In sliding the shield-trained residual (B5) stays near zero overshoot across $r$. In pivoting only the decline fallbacks (B0Sd, B5d) prevent overshoot, by stopping short.}}{6}{figure.caption.9}\protected@file@percent }
-\newlabel{fig:vsr}{{6}{6}{Overshoot rate (top) and probes per episode (bottom) against the true static/kinetic ratio $r$, on the test sets. Dotted vertical line: the shield's assumed $r_{\max }$. In sliding the shield-trained residual (B5) stays near zero overshoot across $r$. In pivoting only the decline fallbacks (B0Sd, B5d) prevent overshoot, by stopping short}{figure.caption.9}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {7}{\ignorespaces Overshoot under a wrong $r_{\max }$, for the shielded model controller (B0S) and the shield-trained residual (B5). Training and test-set shields use $r_{\max }=1.1$ (pivoting) and 1.2 (sliding).}}{6}{figure.caption.10}\protected@file@percent }
-\newlabel{fig:mismatch}{{7}{6}{Overshoot under a wrong $r_{\max }$, for the shielded model controller (B0S) and the shield-trained residual (B5). Training and test-set shields use $r_{\max }=1.1$ (pivoting) and 1.2 (sliding)}{figure.caption.10}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {VII}Conclusion}{6}{section.7}\protected@file@percent }
 \bibcite{silver2018}{2}
 \bibcite{aidoo2026a}{3}
 \bibcite{aidoo2026b}{4}
@@ -106,6 +105,7 @@
 \bibcite{ressafe2026}{15}
 \bibcite{johansson2025}{16}
 \bibcite{shuto2026}{17}
+\@writefile{toc}{\contentsline {section}{\numberline {VII}Conclusion}{7}{section.7}\protected@file@percent }
 \bibcite{holladay2015}{18}
 \bibcite{vina2016}{19}
 \bibcite{toskov2022}{20}
@@ -118,4 +118,4 @@
 \bibcite{mujocoissue}{27}
 \bibcite{dieterich1972}{28}
 \bibcite{canudas1995}{29}
-\gdef \@abspage@last{7}
+\gdef \@abspage@last{8}
