@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023/Debian) (preloaded format=pdflatex 2026.10.2)  20 OCT 2026 14:21
+This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023/Debian) (preloaded format=pdflatex 2026.10.2)  20 OCT 2026 22:36
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -571,7 +571,7 @@ File: t1cmtt.fd 2023/04/13 v2.5m Standard LaTeX font definitions
 LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <5> not available
 (Font)              Font shape `OT1/ptm/b/n' tried instead on input line 32.
  (./abstract.tex)
-<fig_teaser.pdf, id=61, 249.3315pt x 126.4725pt>
+<fig_teaser.pdf, id=62, 249.3315pt x 126.4725pt>
 File: fig_teaser.pdf Graphic file (type pdf)
 <use fig_teaser.pdf>
 Package pdftex.def Info: fig_teaser.pdf  used on input line 36.
@@ -592,26 +592,26 @@ f-dist/fonts/enc/dvips/base/8r.enc}
 
 
  <./fig_teaser.pdf>]
-<fig_mechanism.pdf, id=164, 505.89pt x 155.38051pt>
+<fig_mechanism.pdf, id=165, 505.89pt x 155.38051pt>
 File: fig_mechanism.pdf Graphic file (type pdf)
 <use fig_mechanism.pdf>
 Package pdftex.def Info: fig_mechanism.pdf  used on input line 61.
 (pdftex.def)             Requested size: 523.9575pt x 160.93279pt.
 LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <8> not available
 (Font)              Font shape `OT1/ptm/b/n' tried instead on input line 62.
-<fig_method.pdf, id=165, 505.89pt x 133.6995pt>
+<fig_method.pdf, id=166, 505.89pt x 133.6995pt>
 File: fig_method.pdf Graphic file (type pdf)
 <use fig_method.pdf>
 Package pdftex.def Info: fig_method.pdf  used on input line 65.
 (pdftex.def)             Requested size: 523.9575pt x 138.47704pt.
  [2 <./fig_mechanism.pdf>]
-<fig_feasibility.pdf, id=301, 245.718pt x 173.448pt>
+<fig_feasibility.pdf, id=302, 245.718pt x 173.448pt>
 File: fig_feasibility.pdf Graphic file (type pdf)
 <use fig_feasibility.pdf>
 Package pdftex.def Info: fig_feasibility.pdf  used on input line 91.
 (pdftex.def)             Requested size: 252.945pt x 178.55815pt.
  [3 <./fig_method.pdf> <./fig_feasibility.pdf>] (./results.tex
-<fig_bound.pdf, id=554, 245.718pt x 151.767pt>
+<fig_bound.pdf, id=555, 245.718pt x 151.767pt>
 File: fig_bound.pdf Graphic file (type pdf)
 <use fig_bound.pdf>
 Package pdftex.def Info: fig_bound.pdf  used on input line 23.
@@ -623,7 +623,7 @@ Underfull \vbox (badness 10000) has occurred while \output is active []
 Underfull \vbox (badness 1365) has occurred while \output is active []
 
  [4 <./fig_bound.pdf>]
-<fig_vs_r.pdf, id=636, 505.89pt x 238.49101pt>
+<fig_vs_r.pdf, id=637, 505.89pt x 238.49101pt>
 File: fig_vs_r.pdf Graphic file (type pdf)
 <use fig_vs_r.pdf>
 Package pdftex.def Info: fig_vs_r.pdf  used on input line 43.
@@ -632,7 +632,7 @@ Package pdftex.def Info: fig_vs_r.pdf  used on input line 43.
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
  [5]
-<fig_mismatch.pdf, id=647, 249.3315pt x 126.4725pt>
+<fig_mismatch.pdf, id=648, 249.3315pt x 126.4725pt>
 File: fig_mismatch.pdf Graphic file (type pdf)
 <use fig_mismatch.pdf>
 Package pdftex.def Info: fig_mismatch.pdf  used on input line 61.
@@ -640,6 +640,12 @@ Package pdftex.def Info: fig_mismatch.pdf  used on input line 61.
 )
 (./limitations.tex [6 <./fig_vs_r.pdf> <./fig_mismatch.pdf>]) (./conclusion.tex
 )
+Underfull \hbox (badness 6493) in paragraph at lines 128--129
+\T1/ptm/m/n/10 at []$\T1/cmtt/m/n/10 https : / / github . com / CAN-[]Aidoo / b
+reakaway-[]shield$[]
+ []
+
+
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
 
@@ -659,27 +665,28 @@ Package rerunfilecheck Info: File `main.out' has not changed.
 (rerunfilecheck)             Checksum: 27B130E13DF0D9DBDF56DF481DFC542D;2356.
  ) 
 Here is how much of TeX's memory you used:
- 14979 strings out of 476106
- 244913 string characters out of 5793933
+ 14981 strings out of 476106
+ 244935 string characters out of 5793933
  1962975 words of memory out of 5000000
- 36679 multiletter control sequences out of 15000+600000
- 640306 words of font info for 164 fonts, out of 8000000 for 9000
+ 36680 multiletter control sequences out of 15000+600000
+ 640619 words of font info for 165 fonts, out of 8000000 for 9000
  59 hyphenation exceptions out of 8191
  75i,11n,79p,1728b,556s stack positions out of 10000i,1000n,20000p,200000b,200000s
- </root/.texlive2023/texmf-var/fonts/pk/ljfour/jknappen/ec/ectt0900.600pk></u
-sr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></usr/sha
-re/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/share/tex
-live/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/share/texlive/te
-xmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/share/texlive/texmf-di
-st/fonts/type1/urw/symbol/usyr.pfb></usr/share/texlive/texmf-dist/fonts/type1/u
-rw/symbol/usyr.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/times/utmb8a.
-pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/times/utmbi8a.pfb></usr/shar
-e/texlive/texmf-dist/fonts/type1/urw/times/utmr8a.pfb></usr/share/texlive/texmf
--dist/fonts/type1/urw/times/utmri8a.pfb>
-Output written on main.pdf (8 pages, 343037 bytes).
+ </root/.texlive2023/texmf-var/fonts/pk/ljfour/jknappen/ec/ectt1000.600pk> </
+root/.texlive2023/texmf-var/fonts/pk/ljfour/jknappen/ec/ectt0900.600pk></usr/sh
+are/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></usr/share/te
+xlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/share/texlive/
+texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/share/texlive/texmf-d
+ist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/share/texlive/texmf-dist/fo
+nts/type1/urw/symbol/usyr.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/sy
+mbol/usyr.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/times/utmb8a.pfb><
+/usr/share/texlive/texmf-dist/fonts/type1/urw/times/utmbi8a.pfb></usr/share/tex
+live/texmf-dist/fonts/type1/urw/times/utmr8a.pfb></usr/share/texlive/texmf-dist
+/fonts/type1/urw/times/utmri8a.pfb>
+Output written on main.pdf (8 pages, 350484 bytes).
 PDF statistics:
- 894 PDF objects out of 1000 (max. 8388607)
- 378 compressed objects within 4 object streams
+ 927 PDF objects out of 1000 (max. 8388607)
+ 385 compressed objects within 4 object streams
  66 named destinations out of 1000 (max. 500000)
  148 words of extra memory for PDF output out of 10000 (max. 10000000)
 
