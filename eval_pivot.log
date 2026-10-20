@@ -3,3 +3,7 @@ part r=1.05 done
 part r=1.1 done
 part r=1.2 done
 4640 episodes -> results/pivot_test.json
+part r=1.05 done
+part r=1.1 done
+960 episodes -> results/pivot_mismatch.json
+EVALDONE

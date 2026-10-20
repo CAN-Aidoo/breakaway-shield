@@ -38,7 +38,14 @@ leaves most rods short of the target.
   remaining arc became uncertifiable. In total B0Sd declined on 85, 80, 77.5, 55% of objects.
 - With the defer fallback, 56–61% of steps were certified (B0S, B4, B5).
 
-## Q4 (partial; mismatch set still running)
+## Q4
 - At r = 1.2 > r_max, violations rise roughly tenfold (B5 4.9% of certified steps) and decline-overshoot rises to
   30–32.5%: the certificate fails where its assumption fails.
 - At r ≤ r_max the violation rate (≤0.5%) is consistent with the model–simulator gap measured in V6 (D2).
+- Mismatch (B0S, B5; defer fallback), r in {1.05, 1.1}:
+  - r_max = 1.0 (under-assumed): every step is "certifiable" (0 deferrals), but certificates are violated on
+    4.3% (r=1.05) and 6.6% (r=1.1) of B5 steps, 3.5% and 5.1% for B0S. B5 overshoot 37% and 58.5%; probes 14.2/13.8.
+  - r_max = 1.2 (over-assumed): ~80% of B5 steps deferred, 0 violations, overshoot 48% and 73%; probes 16.3/15.8.
+  - So in pivoting a smaller r_max issues wrong certificates, yet overshoots *less* than a larger one, because a
+    larger r_max hands more steps back to the overshooting model step. With the defer fallback, a correct
+    certificate does not imply a safe episode.
