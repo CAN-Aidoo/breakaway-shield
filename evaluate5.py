@@ -57,29 +57,35 @@ def run(job):
 
 
 def main():
-    jobs = []
+    """Resumable: test/mismatch sets are run one r value at a time into results/parts/ and merged at the end.
+    Episodes and seeds are identical to a single pass."""
+    os.makedirs("results/parts", exist_ok=True)
     if SET in ("test", "mismatch"):
         g = np.random.default_rng(31); objs = [dict(sample(g), i=i) for i in range(40)]
         rs = R_TEST if SET == "test" else R_MIS
         rms = [RMAX_DEF] if SET == "test" else list(RM_MIS)
+        rows = []
         for r in rs:
-            for rm in rms:
-                for name, (mode, w) in methods(SET).items():
-                    for o in objs:
-                        jobs.append((name, mode, w, dict(o, ratio=r, rmax=rm), 5000 + o["i"]))
+            part = f"results/parts/{TASK}_{SET}_r{r}.json"
+            if not os.path.exists(part):
+                jobs = []
+                for rm in rms:
+                    for name, (mode, w) in methods(SET).items():
+                        for o in objs:
+                            jobs.append((name, mode, w, dict(o, ratio=r, rmax=rm), 5000 + o["i"]))
+                with Pool(2) as p:
+                    json.dump(p.map(run, jobs, chunksize=4), open(part, "w"))
+                print(f"part r={r} done", flush=True)
+            rows += json.load(open(part))
     elif SET == "confirm":
         g = np.random.default_rng(47); objs = [dict(sample(g), i=i) for i in range(40)]
         gr = np.random.default_rng(47 + 1000)
         objs = [dict(o, ratio=float(gr.uniform(*R_CONF)), rmax=RMAX_DEF) for o in objs]
-        for name, (mode, w) in methods("confirm").items():
-            for o in objs:
-                jobs.append((name, mode, w, o, 5000 + o["i"]))
-    with Pool(2) as p:
-        rows = p.map(run, jobs, chunksize=4)
-    os.makedirs("results", exist_ok=True)
+        jobs = [(name, mode, w, o, 5000 + o["i"]) for name, (mode, w) in methods("confirm").items() for o in objs]
+        with Pool(2) as p:
+            rows = p.map(run, jobs, chunksize=4)
     json.dump(rows, open(f"results/{TASK}_{SET}.json", "w"))
     print(f"{len(rows)} episodes -> results/{TASK}_{SET}.json")
-
 
 if __name__ == "__main__":
     main()
