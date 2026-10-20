@@ -1,0 +1,22 @@
+\begin{table*}[t]\centering\footnotesize
+\caption{Pivoting test set (40 objects; learned methods: 5 seeds, 200 episodes per cell). Within: final error $\le$0.05\,rad and held. Over: overshoot past the target by more than 0.05\,rad. Probes: angle measurements per pivot. Shield $r_{\max}=1.1$.}\label{tab:pivot}
+\setlength{\tabcolsep}{3.2pt}
+\begin{tabular}{llrrrrrrrrrrrr}
+\toprule
+ & & \multicolumn{3}{c}{$r=1.0$} & \multicolumn{3}{c}{$r=1.05$} & \multicolumn{3}{c}{$r=1.1$} & \multicolumn{3}{c}{$r=1.2$}\\
+\cmidrule(lr){3-5}\cmidrule(lr){6-8}\cmidrule(lr){9-11}\cmidrule(lr){12-14}
+ID & method & within & over & probes & within & over & probes & within & over & probes & within & over & probes\\
+\midrule
+B0 & model & 88 & 12 & 15.8 & 42 & 57 & 15.5 & 20 & 80 & 15.2 & 8 & 92 & 14.4\\
+B1 & model + quasi-static guard & 88 & 12 & 16.2 & 42 & 57 & 15.7 & 20 & 80 & 15.4 & 8 & 92 & 14.6\\
+B0S & model + shield & 85 & 8 & 19.8 & 42 & 48 & 19.1 & 22 & 70 & 18.0 & 8 & 80 & 16.9\\
+B0Sd & model + shield (decline) & 8 & \textbf{0} & 13.2 & 12 & 2 & 12.6 & 18 & \textbf{2} & 11.6 & 8 & \textbf{30} & 11.1\\
+\midrule
+B2 & residual & 74 & 26 & 8.4 & 48 & 52 & 8.3 & 26 & 74 & 8.1 & 8 & 92 & 7.4\\
+B3 & residual + quasi-static guard & 94 & 6 & 10.5 & 48 & 52 & 10.0 & 26 & 74 & 9.8 & 8 & 92 & 8.9\\
+B4 & residual, shield at test & 88 & 4 & 18.3 & 48 & 45 & 18.0 & 26 & 65 & 16.7 & 10 & 82 & 15.5\\
+B5 & shield-trained residual & 85 & 7 & 18.3 & 50 & 42 & 17.8 & 29 & 63 & 16.6 & 10 & 82 & 15.3\\
+B5d & shield-trained (decline) & 10 & \textbf{0} & 11.6 & 12 & \textbf{2} & 11.3 & 22 & \textbf{2} & 10.2 & 10 & 32 & 9.9\\
+\bottomrule
+\end{tabular}
+\end{table*}

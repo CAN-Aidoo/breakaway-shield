@@ -34,19 +34,21 @@ def style(ax):
 fig, axs = plt.subplots(1, len(TASKS), figsize=(3.45, 1.75), squeeze=False); axs = axs[0]
 for ax, t in zip(axs, TASKS):
     S = D[t]["test"][HARD[t]]["summary"]
-    for f in ("B0", "B0S", "B2", "B4", "B5"):
+    OFF = {"B4": (4, -7), "B5": (-11, 3), "B5d": (-17, 4), "B0Sd": (4, -6)}
+    for f in ("B0", "B0S", "B0Sd", "B2", "B4", "B5", "B5d"):
         if f not in S: continue
         v = S[f]; lo, hi = v["overshoot_ci"]
         ax.errorbar(v["probes"], 100 * v["overshoot"], yerr=[[100 * (v["overshoot"] - lo)], [100 * (hi - v["overshoot"])]],
                     fmt=MRK[f], ms=5, color=COL[f], mec="white", mew=0.6, elinewidth=0.7, capsize=0, zorder=3)
-        ax.annotate(f, (v["probes"], 100 * v["overshoot"]), xytext=(4, 2), textcoords="offset points", fontsize=6.5, color=INK2)
+        ax.annotate(f, (v["probes"], 100 * v["overshoot"]), xytext=OFF.get(f, (4, 2)), textcoords="offset points", fontsize=6.5, color=INK2)
+    ax.set_ylim(bottom=-3)
     ax.set_title(f"{TNAME[t]}, $r={HARD[t]}$", fontsize=7.5, pad=3)
     ax.set_xlabel("probes per episode"); style(ax)
 axs[0].set_ylabel("overshoot (%)")
 fig.tight_layout(pad=0.3, w_pad=0.8); fig.savefig("paper/fig_teaser.pdf"); plt.close(fig)
 
 # ---- vs r
-fig, axs = plt.subplots(2, len(TASKS), figsize=(7.0, 3.0), squeeze=False)
+fig, axs = plt.subplots(2, len(TASKS), figsize=(7.0, 3.3), squeeze=False)
 for j, t in enumerate(TASKS):
     rs = sorted(D[t]["test"], key=float)
     fams = [f for f in COL if f in D[t]["test"][rs[0]]["summary"]]
@@ -63,8 +65,8 @@ for j, t in enumerate(TASKS):
         axs[i, j].axvline(1.1 if t == "pivot" else 1.2, color=INK2, lw=0.5, ls=":")
 axs[0, 0].set_ylabel("overshoot (%)"); axs[1, 0].set_ylabel("probes per episode")
 h, l = axs[0, 0].get_legend_handles_labels()
-fig.legend(h, l, loc="upper center", ncol=5, frameon=False, fontsize=6.3, bbox_to_anchor=(0.5, 1.0), handlelength=2.2)
-fig.tight_layout(rect=(0, 0, 1, 0.88), h_pad=0.4); fig.savefig("paper/fig_vs_r.pdf"); plt.close(fig)
+fig.legend(h, l, loc="upper center", ncol=3, frameon=False, fontsize=6.3, bbox_to_anchor=(0.5, 1.0), handlelength=2.2, columnspacing=1.2)
+fig.tight_layout(rect=(0, 0, 1, 0.84), h_pad=0.4); fig.savefig("paper/fig_vs_r.pdf"); plt.close(fig)
 
 # ---- bound conformance (V6)
 V = json.load(open("results/v6_prop1.json"))

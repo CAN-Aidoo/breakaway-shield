@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023/Debian) (preloaded format=pdflatex 2026.10.2)  19 OCT 2026 16:51
+This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023/Debian) (preloaded format=pdflatex 2026.10.2)  20 OCT 2026 13:49
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -592,14 +592,14 @@ f-dist/fonts/enc/dvips/base/8r.enc}
 
 
  <./fig_teaser.pdf>]
-<fig_mechanism.pdf, id=174, 505.89pt x 155.38051pt>
+<fig_mechanism.pdf, id=177, 505.89pt x 155.38051pt>
 File: fig_mechanism.pdf Graphic file (type pdf)
 <use fig_mechanism.pdf>
 Package pdftex.def Info: fig_mechanism.pdf  used on input line 61.
 (pdftex.def)             Requested size: 523.9575pt x 160.93279pt.
 LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <8> not available
 (Font)              Font shape `OT1/ptm/b/n' tried instead on input line 62.
-<fig_method.pdf, id=175, 505.89pt x 133.6995pt>
+<fig_method.pdf, id=178, 505.89pt x 133.6995pt>
 File: fig_method.pdf Graphic file (type pdf)
 <use fig_method.pdf>
 Package pdftex.def Info: fig_method.pdf  used on input line 65.
@@ -608,30 +608,43 @@ Package pdftex.def Info: fig_method.pdf  used on input line 65.
 Underfull \vbox (badness 1371) has occurred while \output is active []
 
  [2 <./fig_mechanism.pdf> <./fig_method.pdf>]
-<fig_feasibility.pdf, id=445, 245.718pt x 173.448pt>
+<fig_feasibility.pdf, id=448, 245.718pt x 173.448pt>
 File: fig_feasibility.pdf Graphic file (type pdf)
 <use fig_feasibility.pdf>
 Package pdftex.def Info: fig_feasibility.pdf  used on input line 91.
 (pdftex.def)             Requested size: 252.945pt x 178.55815pt.
  [3 <./fig_feasibility.pdf>] (./results.tex
-<fig_bound.pdf, id=553, 245.718pt x 151.767pt>
+<fig_bound.pdf, id=556, 245.718pt x 151.767pt>
 File: fig_bound.pdf Graphic file (type pdf)
 <use fig_bound.pdf>
 Package pdftex.def Info: fig_bound.pdf  used on input line 23.
 (pdftex.def)             Requested size: 252.945pt x 156.23837pt.
 
-(./tab_slide.tex) [4 <./fig_bound.pdf>]
-<fig_mismatch.pdf, id=636, 249.3315pt x 122.85901pt>
+(./tab_slide.tex) (./tab_pivot.tex) [4 <./fig_bound.pdf>]
+<fig_vs_r.pdf, id=639, 505.89pt x 216.81pt>
+File: fig_vs_r.pdf Graphic file (type pdf)
+<use fig_vs_r.pdf>
+Package pdftex.def Info: fig_vs_r.pdf  used on input line 43.
+(pdftex.def)             Requested size: 523.9575pt x 224.55737pt.
+
+Underfull \vbox (badness 1342) has occurred while \output is active []
+
+<fig_mismatch.pdf, id=645, 249.3315pt x 122.85901pt>
 File: fig_mismatch.pdf Graphic file (type pdf)
 <use fig_mismatch.pdf>
-Package pdftex.def Info: fig_mismatch.pdf  used on input line 51.
+Package pdftex.def Info: fig_mismatch.pdf  used on input line 61.
 (pdftex.def)             Requested size: 252.945pt x 124.63962pt.
-) (./limitations.tex) (./conclusion.tex) (./refs.tex [5 <./fig_mismatch.pdf>]
+)
+(./limitations.tex [5]
+Underfull \vbox (badness 3482) has occurred while \output is active []
+
+)
+(./conclusion.tex) (./refs.tex [6 <./fig_vs_r.pdf> <./fig_mismatch.pdf>]
 Underfull \hbox (badness 4403) in paragraph at lines 11--12
 []\T1/ptm/m/n/9 A. D. Ames, S. Coogan, M. Egerst-edt, G. No-tomista,
  []
 
-) [6] (./main.aux)
+) [7] (./main.aux)
  ***********
 LaTeX2e <2023-11-01> patch level 1
 L3 programming layer <2024-01-22>
@@ -640,13 +653,13 @@ Package rerunfilecheck Info: File `main.out' has not changed.
 (rerunfilecheck)             Checksum: 27B130E13DF0D9DBDF56DF481DFC542D;2356.
  ) 
 Here is how much of TeX's memory you used:
- 13804 strings out of 476106
- 218325 string characters out of 5793933
- 1949975 words of memory out of 5000000
- 35518 multiletter control sequences out of 15000+600000
+ 14782 strings out of 476106
+ 240136 string characters out of 5793933
+ 1963975 words of memory out of 5000000
+ 36490 multiletter control sequences out of 15000+600000
  637240 words of font info for 157 fonts, out of 8000000 for 9000
  59 hyphenation exceptions out of 8191
- 75i,11n,79p,1103b,564s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 75i,11n,79p,1265b,564s stack positions out of 10000i,1000n,20000p,200000b,200000s
  </root/.texlive2023/texmf-var/fonts/pk/ljfour/jknappen/ec/ectt0900.600pk></u
 sr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></usr/sha
 re/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/share/tex
@@ -657,10 +670,10 @@ rw/symbol/usyr.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/times/utmb8a.
 pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/times/utmbi8a.pfb></usr/shar
 e/texlive/texmf-dist/fonts/type1/urw/times/utmr8a.pfb></usr/share/texlive/texmf
 -dist/fonts/type1/urw/times/utmri8a.pfb>
-Output written on main.pdf (6 pages, 304729 bytes).
+Output written on main.pdf (7 pages, 335867 bytes).
 PDF statistics:
- 795 PDF objects out of 1000 (max. 8388607)
- 356 compressed objects within 4 object streams
- 62 named destinations out of 1000 (max. 500000)
- 143 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 894 PDF objects out of 1000 (max. 8388607)
+ 379 compressed objects within 4 object streams
+ 65 named destinations out of 1000 (max. 500000)
+ 148 words of extra memory for PDF output out of 10000 (max. 10000000)
 

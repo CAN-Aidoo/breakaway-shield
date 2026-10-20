@@ -58,7 +58,6 @@
 \newlabel{prop:slide}{{2}{3}{}{proposition.2}{}}
 \@writefile{toc}{\contentsline {section}{\numberline {IV}Experimental Setup}{3}{section.4}\protected@file@percent }
 \newlabel{sec:setup}{{IV}{3}{Experimental Setup}{section.4}{}}
-\citation{mujocoissue}
 \@writefile{lot}{\contentsline {table}{\numberline {1}{\ignorespaces Simulator validation (validation objects only; recorded before any test data).}}{4}{table.caption.5}\protected@file@percent }
 \newlabel{tab:valid}{{1}{4}{Simulator validation (validation objects only; recorded before any test data)}{table.caption.5}{}}
 \@writefile{toc}{\contentsline {section}{\numberline {V}Results}{4}{section.5}\protected@file@percent }
@@ -69,9 +68,16 @@
 \@writefile{lof}{\contentsline {figure}{\numberline {5}{\ignorespaces Proposition~\ref {prop:pivot} against simulation (V6). Each point is one release from a measured stuck grip. Points above the solid line exceed the bound; points above the dashed line exceed it by more than the sensing margin.}}{4}{figure.caption.6}\protected@file@percent }
 \newlabel{fig:bound}{{5}{4}{Proposition~\ref {prop:pivot} against simulation (V6). Each point is one release from a measured stuck grip. Points above the solid line exceed the bound; points above the dashed line exceed it by more than the sensing margin}{figure.caption.6}{}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {C}Q2: Does the shield bound overshoot?}{4}{subsection.5.3}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {D}Q3: How much of the task admits a certified action?}{4}{subsection.5.4}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {E}Q4: Why do violations and overshoots occur?}{4}{subsection.5.5}\protected@file@percent }
-\newlabel{sec:q4}{{E}{4}{Q4: Why do violations and overshoots occur?}{subsection.5.5}{}}
+\citation{mujocoissue}
+\@writefile{lot}{\contentsline {table}{\numberline {2}{\ignorespaces Sliding test set (40 objects; learned methods: 5 seeds, 200 episodes per cell). Within: final error $\le $5\,mm and held. Over: travel past the target by more than 5\,mm. Probes: position measurements per episode. Shield $r_{\max }=1.2$.}}{5}{table.caption.7}\protected@file@percent }
+\newlabel{tab:slide}{{2}{5}{Sliding test set (40 objects; learned methods: 5 seeds, 200 episodes per cell). Within: final error $\le $5\,mm and held. Over: travel past the target by more than 5\,mm. Probes: position measurements per episode. Shield $r_{\max }=1.2$}{table.caption.7}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {3}{\ignorespaces Pivoting test set (40 objects; learned methods: 5 seeds, 200 episodes per cell). Within: final error $\le $0.05\,rad and held. Over: overshoot past the target by more than 0.05\,rad. Probes: angle measurements per pivot. Shield $r_{\max }=1.1$.}}{5}{table.caption.8}\protected@file@percent }
+\newlabel{tab:pivot}{{3}{5}{Pivoting test set (40 objects; learned methods: 5 seeds, 200 episodes per cell). Within: final error $\le $0.05\,rad and held. Over: overshoot past the target by more than 0.05\,rad. Probes: angle measurements per pivot. Shield $r_{\max }=1.1$}{table.caption.8}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {D}Q3: How much of the task admits a certified action?}{5}{subsection.5.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {E}Q4: Why do violations and overshoots occur?}{5}{subsection.5.5}\protected@file@percent }
+\newlabel{sec:q4}{{E}{5}{Q4: Why do violations and overshoots occur?}{subsection.5.5}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {VI}Limitations}{5}{section.6}\protected@file@percent }
+\newlabel{sec:limits}{{VI}{5}{Limitations}{section.6}{}}
 \citation{xydas1999}
 \citation{dieterich1972}
 \citation{mujocoissue}
@@ -79,13 +85,11 @@
 \citation{kolbert2016}
 \bibstyle{unsrt}
 \bibcite{johannink2019}{1}
-\@writefile{lot}{\contentsline {table}{\numberline {2}{\ignorespaces Sliding test set (40 objects; learned methods: 5 seeds, 200 episodes per cell). Within: final error $\le $5\,mm and held. Over: travel past the target by more than 5\,mm. Probes: position measurements per episode. Shield $r_{\max }=1.2$.}}{5}{table.caption.7}\protected@file@percent }
-\newlabel{tab:slide}{{2}{5}{Sliding test set (40 objects; learned methods: 5 seeds, 200 episodes per cell). Within: final error $\le $5\,mm and held. Over: travel past the target by more than 5\,mm. Probes: position measurements per episode. Shield $r_{\max }=1.2$}{table.caption.7}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {6}{\ignorespaces Overshoot under a wrong $r_{\max }$, for the shielded model controller (B0S) and the shield-trained residual (B5). Training and test-set shields use $r_{\max }=1.1$ (pivoting) and 1.2 (sliding).}}{5}{figure.caption.8}\protected@file@percent }
-\newlabel{fig:mismatch}{{6}{5}{Overshoot under a wrong $r_{\max }$, for the shielded model controller (B0S) and the shield-trained residual (B5). Training and test-set shields use $r_{\max }=1.1$ (pivoting) and 1.2 (sliding)}{figure.caption.8}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {VI}Limitations}{5}{section.6}\protected@file@percent }
-\newlabel{sec:limits}{{VI}{5}{Limitations}{section.6}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {VII}Conclusion}{5}{section.7}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {6}{\ignorespaces Overshoot rate (top) and probes per episode (bottom) against the true static/kinetic ratio $r$, on the test sets. Dotted vertical line: the shield's assumed $r_{\max }$. In sliding the shield-trained residual (B5) stays near zero overshoot across $r$. In pivoting only the decline fallbacks (B0Sd, B5d) prevent overshoot, by stopping short.}}{6}{figure.caption.9}\protected@file@percent }
+\newlabel{fig:vsr}{{6}{6}{Overshoot rate (top) and probes per episode (bottom) against the true static/kinetic ratio $r$, on the test sets. Dotted vertical line: the shield's assumed $r_{\max }$. In sliding the shield-trained residual (B5) stays near zero overshoot across $r$. In pivoting only the decline fallbacks (B0Sd, B5d) prevent overshoot, by stopping short}{figure.caption.9}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {7}{\ignorespaces Overshoot under a wrong $r_{\max }$, for the shielded model controller (B0S) and the shield-trained residual (B5). Training and test-set shields use $r_{\max }=1.1$ (pivoting) and 1.2 (sliding).}}{6}{figure.caption.10}\protected@file@percent }
+\newlabel{fig:mismatch}{{7}{6}{Overshoot under a wrong $r_{\max }$, for the shielded model controller (B0S) and the shield-trained residual (B5). Training and test-set shields use $r_{\max }=1.1$ (pivoting) and 1.2 (sliding)}{figure.caption.10}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {VII}Conclusion}{6}{section.7}\protected@file@percent }
 \bibcite{silver2018}{2}
 \bibcite{aidoo2026a}{3}
 \bibcite{aidoo2026b}{4}
@@ -114,4 +118,4 @@
 \bibcite{mujocoissue}{27}
 \bibcite{dieterich1972}{28}
 \bibcite{canudas1995}{29}
-\gdef \@abspage@last{6}
+\gdef \@abspage@last{7}
