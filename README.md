@@ -3,6 +3,7 @@
 Code, data and pre-registered protocol for the paper *Physics Guards for Residual Policies at Breakaway: When Learned
 Corrections Should Defer to a Friction Model* (Clement Aidoo, CANLABS). All results are from MuJoCo simulation.
 
+**Paper:** engrXiv preprint, [doi:10.31224/8603](https://doi.org/10.31224/8603)  
 Archived release: [doi:10.5281/zenodo.23503813](https://doi.org/10.5281/zenodo.23503813)
 
 **Question.** A residual policy on top of a physics controller can save costly measurements, but in friction-limited
