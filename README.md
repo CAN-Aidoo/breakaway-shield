@@ -1,3 +1,5 @@
+![Physics Guards for Residual Policies at Breakaway: in controlled sliding the shield-trained residual cuts overshoot to 2%; in pivoting the shield declines on exactly the 20 of 40 targets the feasibility condition predicts.](assets/banner.png)
+
 # Physics Guards for Residual Policies at Breakaway
 
 Code, data and pre-registered protocol for the paper *Physics Guards for Residual Policies at Breakaway: When Learned
